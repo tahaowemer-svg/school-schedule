@@ -1654,15 +1654,15 @@ async function sendAIMessage() {
       const h=aiChatHistory[i];
       geminiContents.push({ role: h.role==='assistant'?'model':'user', parts:[{text:h.content}] });
     }
-    const resp = await fetch('https://script.google.com/macros/s/AKfycbxiYF7_VypSWGJH3tAX3THP6IA5CObA6rrHkQLMeVGd_wh-xefWPJYp0xHm3vHjOjZWew/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ contents: geminiContents }),
-      redirect: 'follow'
-    });
-    const text = await resp.text();
-    let data;
-    try { data = JSON.parse(text); } catch(e) { throw new Error('خطأ في تحليل الرد: ' + text.substring(0,100)); }
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: geminiContents })
+      }
+    );
+    const data = await resp.json();
     if(data.error){ throw new Error(data.error.message || 'خطأ في Gemini API'); }
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'لم أتمكن من الإجابة، حاول مجدداً.';
     removeAILoading(loadId);
@@ -1791,17 +1791,14 @@ ${teachersData.filter(t=>t.role!=='admin').map(t=>`${t.name} (${t.subject}، ح�
       return;
     }
     const resp = await fetch(
-      'https://script.google.com/macros/s/AKfycbxiYF7_VypSWGJH3tAX3THP6IA5CObA6rrHkQLMeVGd_wh-xefWPJYp0xHm3vHjOjZWew/exec',
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey2}`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ contents: [{ role:'user', parts:[{text: prompt}] }] }),
-        redirect: 'follow'
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role:'user', parts:[{text: prompt}] }] })
       }
     );
-    const text2 = await resp.text();
-    let data;
-    try { data = JSON.parse(text2); } catch(e) { throw new Error('خطأ في تحليل الرد'); }
+    const data = await resp.json();
     if(data.error){ throw new Error(data.error.message || 'خطأ في Gemini API'); }
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'لم أتمكن من الاقتراح.';
     if (resultEl) {
