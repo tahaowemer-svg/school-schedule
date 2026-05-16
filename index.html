@@ -300,6 +300,55 @@ nav{flex:1;padding:8px;overflow-y:auto;}
 #swap-validation-box{display:none;margin-bottom:12px;}
 
 </style>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC2nB2z_RX7Vt53ejm0tKYR5L2zi8fyAjc",
+    authDomain: "school-schedule-30f5a.firebaseapp.com",
+    databaseURL: "https://school-schedule-30f5a-default-rtdb.firebaseio.com",
+    projectId: "school-schedule-30f5a",
+    storageBucket: "school-schedule-30f5a.firebasestorage.app",
+    messagingSenderId: "421403497690",
+    appId: "1:421403497690:web:8dc1934b8df864d70c1e3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  window._db = db;
+  window._ref = ref;
+  window._set = set;
+  window._get = get;
+
+  // تحميل المفتاح المحفوظ عند فتح الموقع
+  window.addEventListener('load', async () => {
+    try {
+      const snap = await get(ref(db, 'settings/geminiKey'));
+      if (snap.exists() && snap.val()) {
+        const key = snap.val();
+        window._GEMINI_KEY = key;
+        document.querySelectorAll('#gemini-api-key-input').forEach(el => el.value = key);
+      }
+    } catch(e) {}
+  });
+
+  // دالة حفظ المفتاح إلى Firebase
+  window.saveKeyToFirebase = async function() {
+    const val = document.querySelector('#gemini-api-key-input')?.value?.trim() || '';
+    if (!val) { alert('⚠️ الرجاء إدخال المفتاح أولاً'); return; }
+    try {
+      await set(ref(db, 'settings/geminiKey'), val);
+      window._GEMINI_KEY = val;
+      document.querySelectorAll('#gemini-api-key-input').forEach(el => el.value = val);
+      alert('✅ تم حفظ المفتاح بنجاح!');
+    } catch(e) {
+      alert('❌ خطأ في الحفظ');
+    }
+  };
+</script>
 </head>
 <body>
 
@@ -621,6 +670,7 @@ nav{flex:1;padding:8px;overflow-y:auto;}
             <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px;">🔑 مفتاح Gemini API مطلوب للتشغيل</div>
             <div style="display:flex;gap:8px;align-items:center;">
               <input type="password" id="gemini-api-key-input" placeholder="AIza..." style="flex:1;padding:8px 12px;border:1.5px solid var(--amber);border-radius:6px;font-size:12px;font-family:Cairo,sans-serif;" oninput="saveGeminiKey(this.value)" />
+              <button class="btn btn-sm" style="background:#1a6fb5;color:white;border:none;padding:8px 14px;border-radius:6px;font-family:Cairo,sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;" onclick="saveKeyToFirebase()">💾 حفظ</button>
               <button class="btn btn-sm btn-amber" onclick="toggleAIKeySettings()">✕ إغلاق</button>
             </div>
             <div style="font-size:11px;color:var(--amber);margin-top:6px;">📌 احصل على مفتاحك المجاني من: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue);">aistudio.google.com/apikey</a> — المفتاح يبدأ بـ AIza</div>
@@ -643,6 +693,7 @@ nav{flex:1;padding:8px;overflow-y:auto;}
           <div style="flex:1;">
             <div style="font-size:12px;font-weight:700;margin-bottom:5px;">مفتاح Gemini API</div>
             <input type="password" id="gemini-api-key-input" placeholder="AIza... (مطلوب للتشغيل)" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Cairo,sans-serif;" oninput="saveGeminiKey(this.value)" />
+            <button onclick="saveKeyToFirebase()" style="margin-top:8px;width:100%;padding:9px;background:#1a6fb5;color:white;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-size:13px;cursor:pointer;font-weight:600;">💾 حفظ المفتاح</button>
             <div style="font-size:10px;color:var(--text3);margin-top:4px;">احصل على مفتاحك المجاني من <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> — مجاني 100%</div>
           </div>
         </div>
