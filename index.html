@@ -1654,7 +1654,7 @@ async function sendAIMessage() {
       const h=aiChatHistory[i];
       geminiContents.push({ role: h.role==='assistant'?'model':'user', parts:[{text:h.content}] });
     }
-    const resp = await fetch('https://script.google.com/macros/s/AKfycbzeb3B4WDJ0RM4jYSvzUUyBk2qqz0KKEWDO22W8akt4CeLBKl6Hof4UPBbw_c8zSfaU7Q/exec', {
+    const resp = await fetch('https://script.google.com/macros/s/AKfycbxiYF7_VypSWGJH3tAX3THP6IA5CObA6rrHkQLMeVGd_wh-xefWPJYp0xHm3vHjOjZWew/exec', {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ contents: geminiContents })
@@ -1788,7 +1788,7 @@ ${teachersData.filter(t=>t.role!=='admin').map(t=>`${t.name} (${t.subject}، ح�
       return;
     }
     const resp = await fetch(
-      'https://script.google.com/macros/s/AKfycbzeb3B4WDJ0RM4jYSvzUUyBk2qqz0KKEWDO22W8akt4CeLBKl6Hof4UPBbw_c8zSfaU7Q/exec',
+      'https://script.google.com/macros/s/AKfycbxiYF7_VypSWGJH3tAX3THP6IA5CObA6rrHkQLMeVGd_wh-xefWPJYp0xHm3vHjOjZWew/exec',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
