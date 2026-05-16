@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>مدرسة عكرمة الثانوية للبنين — نظام الجدول</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f0f4f8;--bg2:#ffffff;--bg3:#f8fafc;--bg4:#e8f0f8;
+  --border:#d1dde8;--border2:#b0c4d8;
+  --blue:#1a6fb5;--blue2:#155e9e;--blue3:#0d4a82;
+  --blue-light:#dbeafe;--blue-soft:#e8f2fb;
+  --green:#1a7a3c;--green-light:#d1fae5;
+  --amber:#b45309;--amber-light:#fef3c7;
+  --red:#b91c1c;--red-light:#fee2e2;
+  --purple:#6d28d9;--purple-light:#ede9fe;
+  --teal:#0f766e;--teal-light:#ccfbf1;
+  --text:#1e293b;--text2:#475569;--text3:#94a3b8;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 12px rgba(0,0,0,.10);
+}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* LOGIN */
+#login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a6fb5 0%,#0d4a82 50%,#1a3a5c 100%);position:relative;overflow:hidden;}
+#login-page::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,.04);top:-200px;right:-200px;pointer-events:none;}
+.login-card{background:#fff;border-radius:20px;padding:40px 36px;width:420px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;z-index:1;}
+.login-logo{text-align:center;margin-bottom:28px;}
+.login-logo .icon{width:72px;height:72px;background:linear-gradient(135deg,var(--blue),var(--blue3));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 14px;}
+.login-logo h1{font-size:20px;font-weight:800;color:var(--text);}
+.login-logo .school-name{font-size:14px;font-weight:700;color:var(--blue);margin-top:4px;}
+.login-logo p{font-size:12px;color:var(--text2);margin-top:3px;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 13px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:'Cairo',sans-serif;transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--blue);background:#fff;}
+.btn-login{width:100%;padding:12px;background:linear-gradient(135deg,var(--blue),var(--blue3));border:none;border-radius:var(--radius-sm);color:#fff;font-size:15px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;transition:opacity .2s;margin-top:6px;}
+.btn-login:hover{opacity:.92;}
+.login-error{background:var(--red-light);border:1px solid var(--red);color:#991b1b;border-radius:var(--radius-sm);padding:9px 13px;font-size:12px;margin-top:10px;display:none;}
+.demo-accounts{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.demo-accounts p{font-size:11px;color:var(--text3);margin-bottom:8px;text-align:center;}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.demo-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text2);cursor:pointer;font-family:'Cairo',sans-serif;transition:all .15s;text-align:center;}
+.demo-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft);}
+
+/* MAIN APP */
+#app{display:none;}
+.layout{display:flex;height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:235px;background:linear-gradient(180deg,#1a3a5c 0%,#0d2a45 100%);display:flex;flex-direction:column;flex-shrink:0;transition:width .25s;}
+.sidebar-header{padding:18px 14px 14px;border-bottom:1px solid rgba(255,255,255,.08);}
+.school-badge{display:flex;align-items:center;gap:10px;}
+.school-icon{width:38px;height:38px;background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.school-text h2{font-size:12px;font-weight:700;color:#fff;line-height:1.3;}
+.school-text p{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px;}
+.sidebar-user{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+.user-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:2px solid rgba(255,255,255,.2);}
+.user-info p{font-size:12px;font-weight:700;color:#fff;}
+.user-info span{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;display:inline-block;margin-top:3px;}
+.role-admin{background:rgba(59,130,246,.3);color:#93c5fd;}
+.role-assistant{background:rgba(168,85,247,.3);color:#d8b4fe;}
+.role-first{background:rgba(20,184,166,.3);color:#5eead4;}
+.role-teacher{background:rgba(34,197,94,.3);color:#86efac;}
+nav{flex:1;padding:8px;overflow-y:auto;}
+.nav-section{font-size:9px;color:rgba(255,255,255,.3);font-weight:700;padding:10px 8px 4px;text-transform:uppercase;letter-spacing:.08em;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);color:rgba(255,255,255,.6);cursor:pointer;font-size:13px;transition:all .15s;margin-bottom:1px;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:600;}
+.nav-item .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+.nav-badge{background:var(--red);color:#fff;border-radius:10px;font-size:10px;padding:1px 6px;margin-right:auto;font-weight:700;}
+.sidebar-footer{padding:10px 8px;border-top:1px solid rgba(255,255,255,.08);}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--shadow);}
+.topbar-title{font-size:15px;font-weight:700;color:var(--text);}
+.topbar-actions{display:flex;gap:8px;align-items:center;}
+.btn{padding:7px 14px;border-radius:var(--radius-sm);font-size:12px;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .15s;font-weight:600;border:none;display:inline-flex;align-items:center;gap:5px;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue2);}
+.btn-secondary{background:var(--bg3);color:var(--text2);border:1.5px solid var(--border);}
+.btn-secondary:hover{border-color:var(--border2);color:var(--text);background:#fff;}
+.btn-danger{background:var(--red-light);color:var(--red);border:1.5px solid #fca5a5;}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-success{background:var(--green-light);color:var(--green);border:1.5px solid #6ee7b7;}
+.btn-success:hover{background:var(--green);color:#fff;}
+.btn-amber{background:var(--amber-light);color:var(--amber);border:1.5px solid #fcd34d;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-xs{padding:3px 7px;font-size:10px;}
+.icon-btn{width:34px;height:34px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:15px;transition:all .15s;}
+.icon-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-soft);}
+.notif-bubble{position:relative;}
+.notif-dot{position:absolute;top:-3px;left:-3px;width:9px;height:9px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+.content{flex:1;overflow-y:auto;padding:18px;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.stat-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:transform .15s;}
+.stat-card:hover{transform:translateY(-1px);}
+.stat-card .label{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px;margin-bottom:8px;}
+.stat-card .value{font-size:28px;font-weight:800;color:var(--text);line-height:1;}
+.stat-card .sub{font-size:11px;margin-top:5px;}
+.stat-card.blue{border-top:3px solid var(--blue);}
+.stat-card.green{border-top:3px solid var(--green);}
+.stat-card.amber{border-top:3px solid var(--amber);}
+.stat-card.red{border-top:3px solid var(--red);}
+.dashboard-grid{display:grid;grid-template-columns:1fr 300px;gap:14px;}
+.card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-header h3{font-size:13px;font-weight:700;color:var(--text);}
+.card-body{padding:14px;}
+
+/* SCHEDULE TABLE */
+.schedule-container{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.schedule-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;}
+.schedule-toolbar h3{font-size:14px;font-weight:700;color:var(--text);margin-right:auto;}
+.search-input{padding:7px 11px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:'Cairo',sans-serif;color:var(--text);min-width:180px;}
+.search-input:focus{outline:none;border-color:var(--blue);}
+.day-tabs-wrap{display:flex;gap:3px;background:var(--bg);padding:3px;border-radius:8px;}
+.day-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;color:var(--text2);transition:all .15s;}
+.day-tab.active{background:var(--blue);color:#fff;box-shadow:0 2px 6px rgba(26,111,181,.35);}
+.day-tab:hover:not(.active){color:var(--text);background:var(--bg2);}
+.schedule-wrapper{overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 210px);}
+.schedule-table{border-collapse:collapse;width:100%;}
+.schedule-table th{background:var(--blue-soft);color:var(--blue3);font-size:11px;font-weight:700;padding:9px 6px;border:1px solid var(--border);text-align:center;white-space:nowrap;position:sticky;top:0;z-index:5;}
+.schedule-table th:first-child{position:sticky;right:0;z-index:6;background:var(--blue-soft);min-width:60px;}
+.schedule-table td{border:1px solid var(--border);padding:3px;vertical-align:top;min-width:110px;}
+.schedule-table td:first-child{background:var(--bg3);position:sticky;right:0;z-index:2;font-size:11px;font-weight:700;color:var(--text2);text-align:center;min-width:58px;padding:5px 3px;}
+.cell{padding:5px 6px;border-radius:6px;cursor:pointer;transition:all .15s;min-height:52px;position:relative;}
+.cell:hover{transform:scale(1.03);z-index:3;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.cell.empty{background:var(--bg3);border:1.5px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:11px;}
+.cell.empty:hover{border-color:var(--blue);color:var(--blue);}
+.cell-subject{font-size:11px;font-weight:700;margin-bottom:2px;line-height:1.2;}
+.cell-teacher{font-size:9px;opacity:.75;line-height:1.2;margin-top:1px;}
+.cell-tag{position:absolute;top:2px;left:2px;font-size:8px;padding:1px 4px;border-radius:4px;font-weight:700;}
+.tag-swap{background:rgba(180,83,9,.25);color:#b45309;}
+.tag-work{background:rgba(26,122,60,.25);color:#1a7a3c;}
+.s-math{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#1e40af;}
+.s-arabic{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;}
+.s-english{background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#4c1d95;}
+.s-science{background:linear-gradient(135deg,#ccfbf1,#99f6e4);color:#134e4a;}
+.s-social{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#78350f;}
+.s-islamic{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#7f1d1d;}
+.s-tech{background:linear-gradient(135deg,#e0f2fe,#bae6fd);color:#0c4a6e;}
+.s-finance{background:linear-gradient(135deg,#ecfccb,#d9f99d);color:#365314;}
+.s-mgmt{background:linear-gradient(135deg,#f1f5f9,#e2e8f0);color:#334155;}
+.s-skills{background:linear-gradient(135deg,#fef9c3,#fef08a);color:#713f12;}
+.s-other{background:linear-gradient(135deg,#f1f5f9,#e2e8f0);color:#475569;}
+
+/* SWAP */
+.swap-panel{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
+.swap-title{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);}
+.swap-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:start;}
+.swap-arrow{font-size:22px;color:var(--blue);padding-top:26px;text-align:center;}
+.swap-select{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 11px;color:var(--text);font-size:12px;font-family:'Cairo',sans-serif;width:100%;margin-bottom:8px;}
+.swap-select:focus{outline:none;border-color:var(--blue);}
+.swap-label{font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:600;}
+
+/* TEACHERS */
+.teachers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
+.teacher-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;transition:all .15s;box-shadow:var(--shadow);}
+.teacher-card:hover{border-color:var(--border2);box-shadow:var(--shadow-md);}
+.teacher-header{display:flex;align-items:center;gap:11px;margin-bottom:11px;}
+.teacher-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.teacher-name{font-size:13px;font-weight:700;color:var(--text);}
+.teacher-subject{font-size:11px;color:var(--text2);margin-top:2px;}
+.teacher-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.tag{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;}
+.tag-blue{background:var(--blue-light);color:var(--blue3);}
+.tag-green{background:var(--green-light);color:var(--green);}
+.tag-amber{background:var(--amber-light);color:var(--amber);}
+.tag-red{background:var(--red-light);color:var(--red);}
+.tag-purple{background:var(--purple-light);color:var(--purple);}
+.tag-teal{background:var(--teal-light);color:var(--teal);}
+.credentials-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:11px;}
+.credentials-box .cred-row{display:flex;justify-content:space-between;margin-bottom:3px;}
+.cred-label{color:var(--text3);}
+.cred-value{color:var(--text);font-weight:600;font-family:monospace;}
+.teacher-actions{display:flex;gap:5px;margin-top:10px;}
+
+/* WORK SCHED */
+.work-table{width:100%;border-collapse:collapse;font-size:12px;}
+.work-table th{background:var(--blue-soft);color:var(--blue3);padding:9px 8px;border:1px solid var(--border);font-weight:700;text-align:center;}
+.work-table td{border:1px solid var(--border);padding:6px 8px;text-align:center;vertical-align:middle;}
+.work-table tr:hover td{background:var(--bg3);}
+.work-cell-add{color:var(--text3);cursor:pointer;font-size:11px;}
+.work-cell-add:hover{color:var(--blue);}
+.work-entry{background:var(--blue-soft);border-radius:4px;padding:3px 6px;font-size:11px;color:var(--blue3);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin:2px;}
+.work-entry:hover{background:var(--blue-light);}
+.work-entry .del{font-size:10px;color:var(--red);}
+
+/* ABSENCES */
+.abs-item{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;display:flex;gap:11px;align-items:flex-start;box-shadow:var(--shadow);}
+.abs-item.uncovered{border-right:4px solid var(--red);}
+.abs-item.covered{border-right:4px solid var(--green);}
+
+/* NOTIFICATIONS */
+.notif-item{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:7px;display:flex;gap:11px;align-items:flex-start;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);}
+.notif-item.unread{border-right:3px solid var(--blue);background:var(--blue-soft);}
+.notif-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.notif-body p{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.notif-body span{font-size:11px;color:var(--text3);}
+
+/* SUPPORT */
+.support-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.support-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);text-align:center;}
+.support-icon{font-size:32px;margin-bottom:10px;}
+.support-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.support-val{font-size:13px;color:var(--blue);font-weight:600;}
+.copyright-box{background:linear-gradient(135deg,var(--blue),var(--blue3));border-radius:var(--radius);padding:20px;color:#fff;text-align:center;margin-top:14px;}
+.copyright-box h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+.copyright-box p{font-size:12px;opacity:.85;line-height:1.6;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:14px;padding:22px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.modal h2{font-size:15px;font-weight:700;margin-bottom:18px;color:var(--text);}
+.modal-close{position:absolute;top:14px;left:14px;background:var(--bg3);border:1.5px solid var(--border);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:13px;}
+.modal-close:hover{color:var(--red);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-actions{display:flex;gap:7px;justify-content:flex-end;margin-top:14px;}
+
+/* ALERT */
+.alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:12px;margin-bottom:10px;display:flex;align-items:center;gap:7px;font-weight:500;}
+.alert-warning{background:var(--amber-light);border:1px solid #fcd34d;color:var(--amber);}
+.alert-info{background:var(--blue-light);border:1px solid #93c5fd;color:var(--blue3);}
+.alert-success{background:var(--green-light);border:1px solid #6ee7b7;color:var(--green);}
+.alert-danger{background:var(--red-light);border:1px solid #fca5a5;color:var(--red);}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:20px;z-index:999;display:flex;flex-direction:column;gap:7px;}
+.toast-msg{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:7px;animation:slideUp .3s ease;min-width:260px;box-shadow:var(--shadow-md);}
+.toast-msg.success{border-color:var(--green);color:var(--green);}
+.toast-msg.error{border-color:var(--red);color:var(--red);}
+.toast-msg.warning{border-color:var(--amber);color:var(--amber);}
+.toast-msg.info{border-color:var(--blue);color:var(--blue);}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.admin-only,.assistant-up,.duty-up{display:none;}
+@media(max-width:900px){
+  .sidebar{position:fixed;right:-235px;height:100vh;z-index:50;transition:right .25s;}
+  .sidebar.open{right:0;}
+  .layout{position:relative;}
+  .main{width:100%;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .dashboard-grid{grid-template-columns:1fr;}
+  .support-grid{grid-template-columns:1fr;}
+  .teachers-grid{grid-template-columns:1fr;}
+  .topbar{padding:0 12px;}
+  .content{padding:12px;}
+  .mobile-menu-btn{display:flex!important;}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .swap-grid{grid-template-columns:1fr;gap:8px;}
+  .swap-arrow{display:none;}
+  .login-card{padding:24px 18px;}
+}
+.mobile-menu-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text2);padding:4px;}
+
+/* BIOMETRIC PAGE */
+.biometric-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.biometric-status-bar{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);}
+.biometric-dot{width:12px;height:12px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.biometric-dot.connected{background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+
+/* AI CHAT */
+.ai-chat-container{display:flex;flex-direction:column;height:calc(100vh - 180px);background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.ai-chat-header{background:linear-gradient(135deg,var(--blue),var(--blue3));color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px;}
+.ai-chat-header h3{font-size:14px;font-weight:700;flex:1;}
+.ai-chat-messages{flex:1;overflow-y:auto;padding:16px;background:var(--bg3);}
+.ai-chat-input-bar{padding:12px 14px;background:#fff;border-top:1px solid var(--border);display:flex;gap:8px;}
+.ai-chat-input-bar input{flex:1;padding:10px 13px;background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;font-size:13px;font-family:'Cairo',sans-serif;color:var(--text);}
+.ai-chat-input-bar input:focus{outline:none;border-color:var(--blue);}
+.ai-send-btn{background:var(--blue);color:#fff;border:none;border-radius:50%;width:38px;height:38px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ai-send-btn:hover{background:var(--blue2);}
+
+/* AI GENERATOR */
+.ai-gen-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:14px;}
+.ai-gen-card h3{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.ai-gen-result{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:12px;overflow-x:auto;}
+.ai-gen-result table{border-collapse:collapse;width:100%;font-size:12px;}
+.ai-gen-result th{background:var(--blue-soft);color:var(--blue3);padding:7px 10px;border:1px solid var(--border);}
+.ai-gen-result td{padding:6px 10px;border:1px solid var(--border);}
+
+/* SWAP VALIDATION BOX */
+#swap-validation-box{display:none;margin-bottom:12px;}
+
+</style>
+</head>
+<body>
+
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="icon">🏫</div>
+      <h1>نظام إدارة الجدول المدرسي</h1>
+      <div class="school-name">مدرسة عكرمة الثانوية للبنين</div>
+      <p>نظام متكامل لإدارة الجدول والتعويضات</p>
+    </div>
+    <div class="form-group">
+      <label>اسم المستخدم</label>
+      <input type="text" id="login-user" placeholder="أدخل اسم المستخدم" />
+    </div>
+    <div class="form-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="login-pass" placeholder="أدخل كلمة المرور" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn-login" onclick="doLogin()">تسجيل الدخول</button>
+    <div class="login-error" id="login-error">اسم المستخدم أو كلمة المرور غير صحيحة</div>
+    <div class="demo-accounts">
+      <p>حسابات تجريبية للعرض</p>
+      <div class="demo-grid">
+        <div class="demo-btn" onclick="quickLogin('admin','admin123')">🔑 مدير المدرسة</div>
+        <div class="demo-btn" onclick="quickLogin('alaa.abumharib','asst123')">🛠 مساعد المدير</div>
+        <div class="demo-btn" onclick="quickLogin('ibrahim.aborwish','ib1234')">👁 مناوب أول</div>
+        <div class="demo-btn" onclick="quickLogin('ismail.rajudi','is1234')">👨‍🏫 معلم</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="school-badge">
+        <div class="school-icon">🏫</div>
+        <div class="school-text">
+          <h2>عكرمة الثانوية للبنين</h2>
+          <p>نظام إدارة الجدول</p>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">م</div>
+      <div class="user-info">
+        <p id="sidebar-name">المستخدم</p>
+        <span id="sidebar-role-badge" class="role-admin">مدير</span>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-section">الرئيسية</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span> لوحة التحكم</div>
+      <div class="nav-section">الجدول</div>
+      <div class="nav-item" onclick="showPage('schedule',this)"><span class="nav-icon">📅</span> الجدول الأسبوعي</div>
+      <div class="nav-item duty-up" onclick="showPage('swap',this)"><span class="nav-icon">🔄</span> التبديل والتعويض</div>
+      <div class="nav-item duty-up" onclick="showPage('worksched',this)"><span class="nav-icon">📋</span> جدول الإشغال</div>
+      <div class="nav-section">الإدارة</div>
+      <div class="nav-item duty-up" onclick="showPage('absences',this)"><span class="nav-icon">🔴</span> الغيابات <span class="nav-badge" id="abs-badge">0</span></div>
+      <div class="nav-item assistant-up" onclick="showPage('teachers',this)"><span class="nav-icon">👥</span> المعلمون</div>
+      <div class="nav-item admin-only" onclick="showPage('users',this)"><span class="nav-icon">🔐</span> إدارة المستخدمين</div>
+      <div class="nav-section">الذكاء الاصطناعي والبصمة</div>
+      <div class="nav-item duty-up" onclick="showPage('biometric',this)"><span class="nav-icon">🖐️</span> نظام البصمة</div>
+      <div class="nav-item" onclick="showPage('ai-assistant',this)"><span class="nav-icon">🤖</span> المساعد الذكي</div>
+      <div class="nav-item assistant-up" onclick="showPage('ai-generator',this)"><span class="nav-icon">✨</span> توليد الجدول بالذكاء</div>
+      <div class="nav-section">أخرى</div>
+      <div class="nav-item" onclick="showPage('notifications',this)"><span class="nav-icon">🔔</span> الإشعارات <span class="nav-badge" id="notif-nav-badge">1</span></div>
+      <div class="nav-item" onclick="showPage('support',this)"><span class="nav-icon">💬</span> الدعم الفني</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="nav-item" onclick="logout()"><span class="nav-icon">🚪</span> تسجيل الخروج</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title" id="page-title">لوحة التحكم</div>
+      </div>
+      <div class="topbar-actions">
+        <span style="font-size:11px;color:var(--text3);" id="current-date"></span>
+        <div class="notif-bubble">
+          <div class="icon-btn" onclick="showPage('notifications',null)">🔔</div>
+          <div class="notif-dot" id="notif-dot" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="label">📚 إجمالي الحصص اليومية</div><div class="value" id="stat-total">105</div><div class="sub" style="color:var(--blue);">7 حصص × 15 شعبة</div></div>
+          <div class="stat-card green"><div class="label">✅ معلمون حاضرون</div><div class="value" id="stat-present">44</div><div class="sub" style="color:var(--green);">من أصل 44 معلماً</div></div>
+          <div class="stat-card amber"><div class="label">🔄 تبديلات اليوم</div><div class="value" id="stat-swaps">0</div><div class="sub" style="color:var(--amber);">تبديل وتعويض</div></div>
+          <div class="stat-card red"><div class="label">⚠️ حصص بدون تعويض</div><div class="value" id="stat-uncovered">0</div><div class="sub" style="color:var(--red);">تحتاج تعويضاً</div></div>
+        </div>
+        <div class="dashboard-grid">
+          <div>
+            <div class="card">
+              <div class="card-header"><h3>📅 جدول اليوم — <span id="today-day-name">الأحد</span></h3><button class="btn btn-sm btn-primary" onclick="showPage('schedule',document.querySelector('[onclick*=schedule]'))">الجدول الكامل</button></div>
+              <div class="card-body" style="padding:0;overflow-x:auto;" id="today-mini"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="card">
+              <div class="card-header"><h3>⚡ إجراءات سريعة</h3></div>
+              <div class="card-body" style="padding:10px;display:flex;flex-direction:column;gap:6px;">
+                <button class="btn btn-danger duty-up" style="width:100%;justify-content:flex-start;" onclick="openModal('absent-modal')">🔴 تسجيل غياب معلم</button>
+                <button class="btn btn-secondary duty-up" style="width:100%;justify-content:flex-start;" onclick="showPage('swap',null)">🔄 التبديل والتعويض</button>
+                <button class="btn btn-success assistant-up" style="width:100%;justify-content:flex-start;" onclick="openModal('teacher-modal')">➕ إضافة معلم</button>
+                <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;" onclick="showPage('schedule',null)">📅 عرض الجدول الكامل</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>⚠️ تنبيهات</h3></div>
+              <div class="card-body" style="padding:10px;" id="alerts-box">
+                <div class="alert alert-info">🔔 مرحباً بك في نظام عكرمة</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="page" id="page-schedule">
+        <div class="schedule-container">
+          <div class="schedule-toolbar">
+            <div class="day-tabs-wrap">
+              <div class="day-tab active" onclick="filterDay('الأحد',this)">الأحد</div>
+              <div class="day-tab" onclick="filterDay('الاثنين',this)">الاثنين</div>
+              <div class="day-tab" onclick="filterDay('الثلاثاء',this)">الثلاثاء</div>
+              <div class="day-tab" onclick="filterDay('الأربعاء',this)">الأربعاء</div>
+              <div class="day-tab" onclick="filterDay('الخميس',this)">الخميس</div>
+            </div>
+            <input class="search-input" placeholder="🔍 بحث عن معلم أو مادة..." oninput="buildScheduleTable(currentDay,this.value)" />
+            <h3>الجدول العام للشعب الدراسية</h3>
+            <button class="btn btn-sm btn-primary duty-up" id="edit-schedule-btn" onclick="toggleEditMode()">✏️ تفعيل التعديل</button>
+            <button class="btn btn-sm btn-secondary" onclick="window.print()">🖨️ طباعة</button>
+          </div>
+          <div class="schedule-wrapper"><table class="schedule-table" id="main-schedule-table"></table></div>
+        </div>
+      </div>
+
+      <!-- SWAP -->
+      <div class="page" id="page-swap">
+        <div class="alert alert-info" style="margin-bottom:14px;">💡 التبديل يتحقق تلقائياً من تطابق التخصصات وعدم تعارض الحصص</div>
+        <div id="swap-validation-box"></div>
+        <div class="swap-panel">
+          <div class="swap-title">🔄 تبديل حصة بحصة</div>
+          <div class="swap-grid">
+            <div>
+              <div class="swap-label">الحصة الأولى</div>
+              <select class="swap-select" id="swap-day1"><option value="">اليوم</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option></select>
+              <select class="swap-select" id="swap-period1"><option value="">الحصة</option><option value="1">ح1 (8:00-8:45)</option><option value="2">ح2 (8:50-9:35)</option><option value="3">ح3 (9:40-10:25)</option><option value="4">ح4 (10:30-11:15)</option><option value="5">ح5 (11:20-12:05)</option><option value="6">ح6 (12:10-12:55)</option><option value="7">ح7 (13:00-13:45)</option></select>
+              <select class="swap-select" id="swap-teacher1"><option value="">المعلم</option></select>
+            </div>
+            <div class="swap-arrow">⇄</div>
+            <div>
+              <div class="swap-label">الحصة الثانية</div>
+              <select class="swap-select" id="swap-day2"><option value="">اليوم</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option></select>
+              <select class="swap-select" id="swap-period2"><option value="">الحصة</option><option value="1">ح1 (8:00-8:45)</option><option value="2">ح2 (8:50-9:35)</option><option value="3">ح3 (9:40-10:25)</option><option value="4">ح4 (10:30-11:15)</option><option value="5">ح5 (11:20-12:05)</option><option value="6">ح6 (12:10-12:55)</option><option value="7">ح7 (13:00-13:45)</option></select>
+              <select class="swap-select" id="swap-teacher2"><option value="">المعلم</option></select>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:7px;">
+            <button class="btn btn-primary" onclick="executeSwap()">✅ تنفيذ التبديل</button>
+            <button class="btn btn-secondary" onclick="clearSwap()">↺ مسح</button>
+          </div>
+        </div>
+        <div class="swap-panel">
+          <div class="swap-title">👤 تعويض من جدول الإشغال</div>
+          <div class="form-row" style="grid-template-columns:1fr 1fr 1fr;">
+            <div><div class="swap-label">اليوم</div><select class="swap-select" id="cover-day"><option value="">اليوم</option><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option></select></div>
+            <div><div class="swap-label">الحصة</div><select class="swap-select" id="cover-period"><option value="">الحصة</option><option value="1">ح1</option><option value="2">ح2</option><option value="3">ح3</option><option value="4">ح4</option><option value="5">ح5</option><option value="6">ح6</option><option value="7">ح7</option></select></div>
+            <div><div class="swap-label">المعلم البديل</div><select class="swap-select" id="cover-teacher"><option value="">اختر المعلم</option></select></div>
+          </div>
+          <div style="margin-top:10px;"><button class="btn btn-success" onclick="executeCover()">✅ تنفيذ الإشغال</button></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>📋 سجل التبديلات</h3><button class="btn btn-xs btn-danger" onclick="clearSwapLog()">مسح السجل</button></div>
+          <div class="card-body" id="swap-log" style="padding:10px;"></div>
+        </div>
+      </div>
+
+      <!-- WORK SCHED -->
+      <div class="page" id="page-worksched">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:15px;font-weight:700;">📋 جدول الإشغال</h3>
+          <div style="display:flex;gap:7px;">
+            <button class="btn btn-sm btn-secondary" onclick="clearWorkSched()">🗑 مسح الكل</button>
+            <button class="btn btn-sm btn-primary" onclick="openModal('work-add-modal')">➕ إضافة إشغال</button>
+          </div>
+        </div>
+        <div class="alert alert-info" style="margin-bottom:12px;">💡 انقر على أي خلية لإضافة معلم متاح في تلك الحصة</div>
+        <div style="overflow-x:auto;"><table class="work-table" id="work-sched-table"></table></div>
+      </div>
+
+      <!-- ABSENCES -->
+      <div class="page" id="page-absences">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:15px;font-weight:700;">🔴 سجل الغيابات</h3>
+          <button class="btn btn-danger" onclick="openModal('absent-modal')">➕ تسجيل غياب</button>
+        </div>
+        <div id="absences-list"></div>
+      </div>
+
+      <!-- TEACHERS -->
+      <div class="page" id="page-teachers">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">
+            <input class="search-input" placeholder="🔍 بحث عن معلم..." oninput="buildTeachersGrid(this.value)" />
+            <select class="search-input" style="width:160px;" onchange="buildTeachersGrid('',this.value)">
+              <option value="">كل التخصصات</option>
+              <option>رياضيات</option><option>لغة عربية</option><option>لغة إنجليزية</option><option>تربية إسلامية</option><option>علوم</option><option>اجتماعيات</option><option>حاسوب</option><option>علوم مالية</option><option>تكنولوجيا</option><option>أعمال</option><option>تربية رياضية</option>
+            </select>
+          </div>
+          <button class="btn btn-primary assistant-up" onclick="openModal('teacher-modal')">➕ إضافة معلم</button>
+        </div>
+        <div class="teachers-grid" id="teachers-grid"></div>
+      </div>
+
+      <!-- USERS -->
+      <div class="page" id="page-users">
+        <div class="card">
+          <div class="card-header"><h3>🔐 إدارة المستخدمين وصلاحياتهم</h3></div>
+          <div class="card-body" style="padding:0;overflow-x:auto;" id="users-table-container"></div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="page" id="page-notifications">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h3 style="font-size:15px;font-weight:700;">🔔 الإشعارات</h3>
+          <button class="btn btn-sm btn-secondary" onclick="markAllRead()">✓ قراءة الكل</button>
+        </div>
+        <div id="notif-list"></div>
+      </div>
+
+      <!-- SUPPORT -->
+      <div class="page" id="page-support">
+        <div class="support-grid">
+          <div class="support-card"><div class="support-icon">📱</div><div class="support-title">واتساب</div><div class="support-val">+962 7X XXX XXXX</div></div>
+          <div class="support-card"><div class="support-icon">📧</div><div class="support-title">البريد الإلكتروني</div><div class="support-val">support@akrama.edu.jo</div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header"><h3>ℹ️ معلومات النظام</h3></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;">
+              <div><span style="color:var(--text2);">المدرسة:</span> <strong>عكرمة الثانوية للبنين</strong></div>
+              <div><span style="color:var(--text2);">الإصدار:</span> <strong>3.0.0</strong></div>
+              <div><span style="color:var(--text2);">عدد الشعب:</span> <strong>15 شعبة</strong></div>
+              <div><span style="color:var(--text2);">الحصص اليومية:</span> <strong>7 حصص</strong></div>
+              <div><span style="color:var(--text2);">عدد المعلمين:</span> <strong>44 معلم</strong></div>
+              <div><span style="color:var(--text2);">تاريخ الإنشاء:</span> <strong>إنشاء الجدول: 16/04/2026</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright-box">
+          <h3>© حقوق الطبع والنشر محفوظة</h3>
+          <p>جميع حقوق الطبع والنشر لنظام إدارة الجدول المدرسي محفوظة لمدرسة عكرمة الثانوية للبنين<br>لا يجوز نسخ أو توزيع أو تعديل هذا النظام دون إذن مسبق<br>تطوير وتصميم: فريق الدعم الفني التعليمي — 2026</p>
+        </div>
+      </div>
+
+      <!-- BIOMETRIC PAGE -->
+      <div class="page" id="page-biometric">
+        <div class="biometric-header">
+          <h3 style="font-size:15px;font-weight:700;">🖐️ نظام متابعة البصمة</h3>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="biometric-connect-btn" class="btn btn-primary btn-sm" onclick="connectBiometric()">🔗 اتصال بنظام البصمة</button>
+            <button class="btn btn-secondary btn-sm" onclick="fetchBiometricAttendance()">🔄 تحديث</button>
+          </div>
+        </div>
+        <div class="biometric-status-bar">
+          <div class="biometric-dot" id="biometric-dot-indicator"></div>
+          <div style="flex:1;">
+            <span id="biometric-status" style="font-size:13px;font-weight:600;color:var(--red);">⭕ غير متصل — اضغط "اتصال" لربط نظام البصمة</span>
+          </div>
+        </div>
+        <div class="alert alert-info" style="margin-bottom:14px;">
+          💡 <strong>طريقة الربط:</strong> ضع رابط API نظام البصمة في المتغير <code>BIOMETRIC_API_URL</code> في الكود، وعند الضغط على "اتصال" سيجلب الحضور والغياب تلقائياً ويسجّل الغيابات.
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>📊 تقرير الحضور والغياب اليوم</h3></div>
+          <div class="card-body" style="padding:0;overflow-x:auto;" id="biometric-table">
+            <div style="text-align:center;padding:30px;color:var(--text3);">قم بالاتصال بنظام البصمة أولاً لعرض البيانات</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-header"><h3>⚙️ إعدادات الربط</h3></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group"><label>رابط API نظام البصمة</label><input type="text" placeholder="https://biometric.school.edu/api/v1" id="bio-api-url" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-family:Cairo,sans-serif;font-size:13px;" /></div>
+              <div class="form-group"><label>مفتاح API</label><input type="password" placeholder="API Key" id="bio-api-key" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-family:Cairo,sans-serif;font-size:13px;" /></div>
+            </div>
+            <button class="btn btn-primary" onclick="saveBiometricConfig()">💾 حفظ الإعدادات</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI ASSISTANT PAGE -->
+      <div class="page" id="page-ai-assistant">
+        <div class="ai-chat-container">
+          <div class="ai-chat-header">
+            <span style="font-size:22px;">🤖</span>
+            <h3>المساعد الذكي لجدول عكرمة</h3>
+            <button class="btn btn-xs" style="background:rgba(255,255,255,.15);color:#fff;border:none;margin-left:6px;" onclick="toggleAIKeySettings()">⚙️ API</button>
+            <button class="btn btn-xs" style="background:rgba(255,255,255,.15);color:#fff;border:none;" onclick="clearAIChat()">🗑 مسح</button>
+          </div>
+          <div id="ai-key-settings" style="display:none;background:var(--amber-light);border-bottom:2px solid var(--amber);padding:12px 16px;">
+            <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px;">🔑 مفتاح Gemini API مطلوب للتشغيل</div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="password" id="gemini-api-key-input" placeholder="AIza..." style="flex:1;padding:8px 12px;border:1.5px solid var(--amber);border-radius:6px;font-size:12px;font-family:Cairo,sans-serif;" oninput="saveGeminiKey(this.value)" />
+              <button class="btn btn-sm btn-amber" onclick="toggleAIKeySettings()">✕ إغلاق</button>
+            </div>
+            <div style="font-size:11px;color:var(--amber);margin-top:6px;">📌 احصل على مفتاحك المجاني من: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--blue);">aistudio.google.com/apikey</a> — المفتاح يبدأ بـ AIza</div>
+          </div>
+          <div class="ai-chat-messages" id="ai-chat-messages">
+            <div style="text-align:center;padding:20px;color:var(--text2);font-size:12px;">🤖 مساعد الجدول الذكي<br><small>اسألني مثلاً: وين حصة الأستاذ فريد؟ — من يدرس عاشر أ الحصة الثالثة؟</small></div>
+          </div>
+          <div class="ai-chat-input-bar">
+            <input type="text" id="ai-input" placeholder="اسألني عن الجدول، المعلمين، الغيابات..." onkeydown="if(event.key==='Enter')sendAIMessage()" />
+            <button class="ai-send-btn" onclick="sendAIMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI SCHEDULE GENERATOR PAGE -->
+      <div class="page" id="page-ai-generator">
+        <div class="alert alert-info" style="margin-bottom:14px;">✨ الذكاء الاصطناعي يقترح جدولاً كاملاً بناءً على بيانات المعلمين والتخصصات — يمكنك مراجعته وتطبيقه</div>
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);">
+          <span style="font-size:18px;">🔑</span>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:700;margin-bottom:5px;">مفتاح Gemini API</div>
+            <input type="password" id="gemini-api-key-input" placeholder="AIza... (مطلوب للتشغيل)" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Cairo,sans-serif;" oninput="saveGeminiKey(this.value)" />
+            <div style="font-size:10px;color:var(--text3);margin-top:4px;">احصل على مفتاحك المجاني من <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> — مجاني 100%</div>
+          </div>
+        </div>
+        <div class="ai-gen-card">
+          <h3>📅 اقتراح جدول أسبوعي رئيسي</h3>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:12px;">الذكاء الاصطناعي سيقترح توزيعاً للمواد والمعلمين على الشعب والأيام مراعياً الحمل الدراسي والتخصصات.</p>
+          <button id="ai-gen-main-btn" class="btn btn-primary" onclick="generateAISchedule('main')">🤖 اقتراح جدول رئيسي</button>
+        </div>
+        <div class="ai-gen-card">
+          <h3>📋 اقتراح جدول إشغال</h3>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:12px;">الذكاء الاصطناعي سيقترح جدول إشغال للمعلمين بناءً على حصصهم الحرة وإمكانية تغطية الغيابات.</p>
+          <button id="ai-gen-work-btn" class="btn btn-secondary" onclick="generateAISchedule('work')">🤖 اقتراح جدول إشغال</button>
+        </div>
+        <div id="ai-schedule-result" class="ai-gen-result"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="absent-modal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal('absent-modal')">✕</div>
+    <h2>🔴 تسجيل غياب معلم</h2>
+    <div class="form-group"><label>المعلم الغائب</label><select id="abs-teacher"></select></div>
+    <div class="form-group"><label>التاريخ</label><input type="date" id="abs-date"></div>
+    <div class="form-group"><label>الحصص المتأثرة</label>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;" id="abs-periods-check">
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="1"> ح1</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="2"> ح2</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="3"> ح3</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="4"> ح4</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="5"> ح5</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="6"> ح6</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;"><input type="checkbox" value="7"> ح7</label>
+      </div>
+    </div>
+    <div class="form-group"><label>ملاحظات</label><textarea id="abs-notes" rows="2" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-size:13px;"></textarea></div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeModal('absent-modal')">إلغاء</button>
+      <button class="btn btn-danger" onclick="saveAbsence()">تسجيل الغياب</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cover-modal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal('cover-modal')">✕</div>
+    <h2>🔄 تعيين معلم بديل</h2>
+    <div class="form-group"><label>الغياب</label><select id="cover-abs-id"></select></div>
+    <div class="form-group"><label>المعلم البديل</label><select id="cover-sub-teacher"></select></div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeModal('cover-modal')">إلغاء</button>
+      <button class="btn btn-success" onclick="saveCover()">تعيين البديل</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="teacher-modal">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal('teacher-modal');resetTeacherForm()">✕</div>
+    <h2>👨‍🏫 <span id="teacher-modal-title">إضافة معلم جديد</span></h2>
+    <input type="hidden" id="teacher-edit-id">
+    <div class="form-row">
+      <div class="form-group"><label>الاسم الكامل</label><input type="text" id="t-name" placeholder="اسم المعلم كاملاً"></div>
+      <div class="form-group"><label>الرقم الوزاري</label><input type="text" id="t-ministry" placeholder="XXXXXX"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>التخصص</label>
+        <select id="t-subject"><option>رياضيات</option><option>لغة عربية</option><option>لغة إنجليزية</option><option>تربية إسلامية</option><option>علوم</option><option>اجتماعيات</option><option>حاسوب</option><option>علوم مالية</option><option>تكنولوجيا</option><option>أعمال</option><option>تربية رياضية</option><option>أخرى</option></select>
+      </div>
+      <div class="form-group"><label>الرتبة</label>
+        <select id="t-type"><option>معلم أول</option><option>خبير</option><option>قائد</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>الصلاحية</label>
+        <select id="t-role"><option value="teacher">معلم</option><option value="first">مناوب أول</option><option value="assistant">مساعد المدير</option><option value="admin">مدير</option></select>
+      </div>
+      <div class="form-group"><label>الحد الأعلى للحصص</label><input type="number" id="t-maxload" value="22" min="1" max="40"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>اسم المستخدم</label><input type="text" id="t-username"></div>
+      <div class="form-group"><label>كلمة المرور</label><input type="text" id="t-password"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeModal('teacher-modal');resetTeacherForm()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveTeacher()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="work-add-modal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-close" onclick="closeModal('work-add-modal')">✕</div>
+    <h2>📋 إضافة إشغال</h2>
+    <div class="form-group"><label>اليوم</label><select id="wa-day"><option>الأحد</option><option>الاثنين</option><option>الثلاثاء</option><option>الأربعاء</option><option>الخميس</option></select></div>
+    <div class="form-group"><label>الحصة</label><select id="wa-period"><option value="1">ح1</option><option value="2">ح2</option><option value="3">ح3</option><option value="4">ح4</option><option value="5">ح5</option><option value="6">ح6</option><option value="7">ح7</option></select></div>
+    <div class="form-group"><label>المعلم المتاح</label><select id="wa-teacher"></select></div>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeModal('work-add-modal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveWorkEntry()">إضافة</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===================== CONSTANTS =====================
+const ROLE_NAMES={admin:'مدير',assistant:'مساعد المدير',first:'مناوب أول',teacher:'معلم'};
+const PERIODS=[{n:1,t:'8:00-8:45'},{n:2,t:'8:50-9:35'},{n:3,t:'9:40-10:25'},{n:4,t:'10:30-11:15'},{n:5,t:'11:20-12:05'},{n:6,t:'12:10-12:55'},{n:7,t:'13:00-13:45'}];
+const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+
+// ===================== USERS (accounts) =====================
+// الأسماء مطابقة للأكسل بالضبط
+const USERS={
+  'admin':{pass:'admin123',role:'admin',name:'سعود لهد مفيلح العثمان',color:'#1a6fb5'},
+  'alaa.abumharib':{pass:'asst123',role:'assistant',name:'علاء سلمان حمدان ابومحارب',color:'#6d28d9'},
+  'rami.alolemat':{pass:'rm1234',role:'assistant',name:'رامي ناصر سليمان العليمات',color:'#6d28d9'},
+  'ibrahim.aborwish':{pass:'ib1234',role:'first',name:'إبراهيم حسين سليمان ابودرويش',color:'#0f766e'},
+  // باقي المعلمين
+  'ismail.rajudi':{pass:'is1234',role:'teacher',name:'اسماعيل محمد سليمان الراجودي',color:'#1a6fb5'},
+  'adi.alsaadi':{pass:'ad1234',role:'teacher',name:'عدي محمد محمود السعدي',color:'#b45309'},
+  'moaz.maqadadi':{pass:'mo1234',role:'teacher',name:'معاذ عبدالاله راجي مقدادي',color:'#0f766e'},
+  'haytham.abumharib':{pass:'ht1234',role:'teacher',name:'هيثم موسى يوسف ابومحارب',color:'#1a6fb5'},
+  'anwar.alqaer':{pass:'an1234',role:'teacher',name:'أنور فراج سلام القعير',color:'#b91c1c'},
+  'osaid.alhajaj':{pass:'os1234',role:'teacher',name:'اسيد فاروق حسن الحجاج',color:'#1a6fb5'},
+  'akram.almughier':{pass:'ak1234',role:'teacher',name:'اكرم خليل صالح المغير',color:'#6d28d9'},
+  'suleiman.shriteh':{pass:'su1234',role:'teacher',name:'سليمان فارس سليمان شريتح',color:'#0f766e'},
+  'amer.abumharib':{pass:'am1234',role:'teacher',name:'عامر سلمان حمدان ابو محارب',color:'#b45309'},
+  'alaa.abusabeeh':{pass:'al1234',role:'teacher',name:'علاء خالد عبد الرحمن ابو صبيح',color:'#1a6fb5'},
+  'moh.alsawalmeh':{pass:'ms1234',role:'teacher',name:'محمد يونس حسن السوالمه',color:'#6d28d9'},
+  'walid.alsoufi':{pass:'wa1234',role:'teacher',name:'وليد عياد حماد الصوفي',color:'#0f766e'},
+  'sultan.dakhallah':{pass:'st1234',role:'teacher',name:'سلطان احمد عوض دخل الله',color:'#b45309'},
+  'moh.alayedi':{pass:'ma1234',role:'teacher',name:'محمد عبد ربه يوسف العايدى',color:'#1a6fb5'},
+  'ibrahim.aljurdeen':{pass:'ij1234',role:'teacher',name:'ابراهيم عبد الرحمن محمد الجردين',color:'#6d28d9'},
+  'ahmad.alarafeen':{pass:'aa1234',role:'teacher',name:'احمد سليم سلمان العرافين',color:'#0f766e'},
+  'ashraf.abumahfouz':{pass:'as1234',role:'teacher',name:'اشرف منذر اسماعيل ابو محفوظ',color:'#b45309'},
+  'moh.abumharib':{pass:'mb1234',role:'teacher',name:'محمد خالد محمد ابومحارب',color:'#1a6fb5'},
+  'talal.alshrafat':{pass:'tl1234',role:'teacher',name:'طلال رجاء مطر الشرفات',color:'#6d28d9'},
+  'moh.banikhaled':{pass:'mk1234',role:'teacher',name:'محمد عبدالله مطر بني خالد',color:'#0f766e'},
+  'sultan.alshubaib':{pass:'ss1234',role:'teacher',name:'سلطان قبلان خليف الشبيب',color:'#b45309'},
+  'muhilan.alnueimi':{pass:'mn1234',role:'teacher',name:'محيلان فهد محمد النعيمي',color:'#1a6fb5'},
+  'mohnd.almuwali':{pass:'mm1234',role:'teacher',name:'مهند ماجد حسن الموالي',color:'#6d28d9'},
+  'maen.alzahabi':{pass:'mz1234',role:'teacher',name:'معن محمد رضا حسن الذهبي',color:'#0f766e'},
+  'khaled.sabeeh':{pass:'ks1234',role:'teacher',name:'خالد جمال عبد العزيز صبيح',color:'#b45309'},
+  'ahmad.suleiman':{pass:'ah1234',role:'teacher',name:'احمد خالد جابر سليمان',color:'#1a6fb5'},
+  'aref.alshamout':{pass:'ar1234',role:'teacher',name:'عارف سالم عويض الشموط',color:'#6d28d9'},
+  'fouad.alhamd':{pass:'fo1234',role:'teacher',name:'فؤاد احمد عبد الخالق الحمد',color:'#0f766e'},
+  'farid.alkhateeb':{pass:'fr1234',role:'teacher',name:'فريد عبدالله فريد الخطيب',color:'#b45309'},
+  'ibrahim.alatim':{pass:'ia1234',role:'teacher',name:'ابراهيم سلمان ناصر الاتيم',color:'#1a6fb5'},
+  'kamal.abujaber':{pass:'km1234',role:'teacher',name:'كمال عبدالرحمن ابراهيم ابوجابر',color:'#6d28d9'},
+  'alaa.alreihani':{pass:'ar2234',role:'teacher',name:'علاء كمال طعمه الريحاني',color:'#0f766e'},
+  'moh.shaout':{pass:'msh1234',role:'teacher',name:'محمد عبدالعزيز خليل شاعوت',color:'#b45309'},
+  'osama.oweis':{pass:'ow1234',role:'teacher',name:'اسامه عوده خليل عويس',color:'#1a6fb5'},
+  'hasan.alanazi':{pass:'ha1234',role:'teacher',name:'حسن خلف شمالي العنزي',color:'#6d28d9'},
+  'moh.alhubarat':{pass:'mh1234',role:'teacher',name:'محمد عبد الباسط محمد الهبرات',color:'#0f766e'},
+  'hashem.saleh':{pass:'hs1234',role:'teacher',name:'هاشم حسين محمد صالح',color:'#b45309'},
+  'ashraf.zaindeen':{pass:'az1234',role:'teacher',name:'اشرف بيان فوزي زين الدين',color:'#1a6fb5'},
+  'jihad.alnawas':{pass:'jn1234',role:'teacher',name:'جهاد ابراهيم حسن النواس',color:'#6d28d9'},
+  'issam.abuhijaa':{pass:'ih1234',role:'teacher',name:'عصام خليل محمود ابو الهيجاء',color:'#0f766e'},
+};
+
+// ===================== TEACHERS DATA (من الأكسل بالضبط) =====================
+let teachersData=[
+  // الإدارة
+  {id:1,name:'سعود لهد مفيلح العثمان',ministry:'137898',subject:'إدارة',type:'مدير',role:'admin',user:'admin',pass:'admin123',maxLoad:0,subs:0},
+  {id:2,name:'علاء سلمان حمدان ابومحارب',ministry:'129295',subject:'رياضيات',type:'قائد',role:'assistant',user:'alaa.abumharib',pass:'asst123',maxLoad:18,subs:0},
+  {id:3,name:'رامي ناصر سليمان العليمات',ministry:'186235',subject:'إدارة مدرسية',type:'خبير',role:'assistant',user:'rami.alolemat',pass:'rm1234',maxLoad:20,subs:0},
+  // معلمو تربية إسلامية
+  {id:4,name:'اسماعيل محمد سليمان الراجودي',ministry:'166540',subject:'تربية إسلامية',type:'معلم أول',role:'teacher',user:'ismail.rajudi',pass:'is1234',maxLoad:22,subs:0},
+  {id:5,name:'عدي محمد محمود السعدي',ministry:'196118',subject:'تربية إسلامية',type:'معلم أول',role:'teacher',user:'adi.alsaadi',pass:'ad1234',maxLoad:22,subs:0},
+  {id:6,name:'معاذ عبدالاله راجي مقدادي',ministry:'210795',subject:'تربية إسلامية',type:'خبير',role:'teacher',user:'moaz.maqadadi',pass:'mo1234',maxLoad:20,subs:0},
+  {id:7,name:'هيثم موسى يوسف ابومحارب',ministry:'222784',subject:'تربية إسلامية',type:'معلم أول',role:'teacher',user:'haytham.abumharib',pass:'ht1234',maxLoad:22,subs:0},
+  {id:8,name:'أنور فراج سلام القعير',ministry:'225694',subject:'تربية إسلامية',type:'خبير',role:'teacher',user:'anwar.alqaer',pass:'an1234',maxLoad:20,subs:0},
+  // معلمو لغة عربية
+  {id:9,name:'اسيد فاروق حسن الحجاج',ministry:'187593',subject:'لغة عربية',type:'خبير',role:'teacher',user:'osaid.alhajaj',pass:'os1234',maxLoad:20,subs:0},
+  {id:10,name:'اكرم خليل صالح المغير',ministry:'164520',subject:'لغة عربية',type:'معلم أول',role:'teacher',user:'akram.almughier',pass:'ak1234',maxLoad:22,subs:0},
+  {id:11,name:'سليمان فارس سليمان شريتح',ministry:'193240',subject:'لغة عربية',type:'معلم أول',role:'teacher',user:'suleiman.shriteh',pass:'su1234',maxLoad:22,subs:0},
+  {id:12,name:'عامر سلمان حمدان ابو محارب',ministry:'200778',subject:'لغة عربية',type:'خبير',role:'teacher',user:'amer.abumharib',pass:'am1234',maxLoad:20,subs:0},
+  // معلمو لغة إنجليزية
+  {id:13,name:'علاء خالد عبد الرحمن ابو صبيح',ministry:'229145',subject:'لغة إنجليزية',type:'معلم أول',role:'teacher',user:'alaa.abusabeeh',pass:'al1234',maxLoad:22,subs:0},
+  {id:14,name:'محمد يونس حسن السوالمه',ministry:'204505',subject:'لغة إنجليزية',type:'معلم أول',role:'teacher',user:'moh.alsawalmeh',pass:'ms1234',maxLoad:22,subs:0},
+  {id:15,name:'وليد عياد حماد الصوفي',ministry:'115614',subject:'لغة إنجليزية',type:'خبير',role:'teacher',user:'walid.alsoufi',pass:'wa1234',maxLoad:20,subs:0},
+  {id:16,name:'سلطان احمد عوض دخل الله',ministry:'225697',subject:'لغة إنجليزية',type:'معلم أول',role:'teacher',user:'sultan.dakhallah',pass:'st1234',maxLoad:22,subs:0},
+  {id:17,name:'محمد عبد ربه يوسف العايدى',ministry:'225688',subject:'لغة إنجليزية',type:'خبير',role:'teacher',user:'moh.alayedi',pass:'ma1234',maxLoad:20,subs:0},
+  // معلمو رياضيات
+  {id:18,name:'ابراهيم عبد الرحمن محمد الجردين',ministry:'202131',subject:'رياضيات',type:'معلم أول',role:'teacher',user:'ibrahim.aljurdeen',pass:'ij1234',maxLoad:22,subs:0},
+  {id:19,name:'احمد سليم سلمان العرافين',ministry:'182254',subject:'رياضيات',type:'خبير',role:'teacher',user:'ahmad.alarafeen',pass:'aa1234',maxLoad:20,subs:0},
+  {id:20,name:'اشرف منذر اسماعيل ابو محفوظ',ministry:'221164',subject:'رياضيات',type:'معلم أول',role:'teacher',user:'ashraf.abumahfouz',pass:'as1234',maxLoad:22,subs:0},
+  {id:21,name:'محمد خالد محمد ابومحارب',ministry:'951041442',subject:'رياضيات',type:'معلم أول',role:'first',user:'moh.abumharib',pass:'mb1234',maxLoad:22,subs:0},
+  // معلمو اجتماعيات
+  {id:22,name:'طلال رجاء مطر الشرفات',ministry:'194349',subject:'اجتماعيات',type:'معلم أول',role:'teacher',user:'talal.alshrafat',pass:'tl1234',maxLoad:22,subs:0},
+  {id:23,name:'محمد عبدالله مطر بني خالد',ministry:'193649',subject:'اجتماعيات',type:'معلم أول',role:'teacher',user:'moh.banikhaled',pass:'mk1234',maxLoad:22,subs:0},
+  {id:24,name:'سلطان قبلان خليف الشبيب',ministry:'183735',subject:'اجتماعيات',type:'معلم أول',role:'teacher',user:'sultan.alshubaib',pass:'ss1234',maxLoad:22,subs:0},
+  {id:25,name:'محيلان فهد محمد النعيمي',ministry:'821053718',subject:'اجتماعيات',type:'خبير',role:'teacher',user:'muhilan.alnueimi',pass:'mn1234',maxLoad:20,subs:0},
+  // معلمو علوم
+  {id:26,name:'مهند ماجد حسن الموالي',ministry:'229113',subject:'علوم',type:'معلم أول',role:'teacher',user:'mohnd.almuwali',pass:'mm1234',maxLoad:22,subs:0},
+  {id:27,name:'ابراهيم حسين سليمان ابودرويش',ministry:'200328',subject:'علوم',type:'معلم أول',role:'first',user:'ibrahim.aborwish',pass:'ib1234',maxLoad:22,subs:0},
+  {id:28,name:'معن محمد رضا حسن الذهبي',ministry:'190491',subject:'علوم',type:'معلم أول',role:'teacher',user:'maen.alzahabi',pass:'mz1234',maxLoad:22,subs:0},
+  // علوم مالية
+  {id:29,name:'خالد جمال عبد العزيز صبيح',ministry:'229128',subject:'علوم مالية',type:'خبير',role:'teacher',user:'khaled.sabeeh',pass:'ks1234',maxLoad:20,subs:0},
+  {id:30,name:'احمد خالد جابر سليمان',ministry:'',subject:'علوم مالية',type:'معلم أول',role:'teacher',user:'ahmad.suleiman',pass:'ah1234',maxLoad:22,subs:0},
+  {id:31,name:'عارف سالم عويض الشموط',ministry:'781051268',subject:'علوم مالية',type:'خبير',role:'teacher',user:'aref.alshamout',pass:'ar1234',maxLoad:20,subs:0},
+  // معلمو حاسوب
+  {id:32,name:'فؤاد احمد عبد الخالق الحمد',ministry:'145667',subject:'حاسوب',type:'معلم أول',role:'teacher',user:'fouad.alhamd',pass:'fo1234',maxLoad:22,subs:0},
+  {id:33,name:'فريد عبدالله فريد الخطيب',ministry:'200039116',subject:'حاسوب',type:'خبير',role:'teacher',user:'farid.alkhateeb',pass:'fr1234',maxLoad:20,subs:0},
+  // تربية رياضية
+  {id:34,name:'ابراهيم سلمان ناصر الاتيم',ministry:'178607',subject:'تربية رياضية',type:'معلم أول',role:'teacher',user:'ibrahim.alatim',pass:'ia1234',maxLoad:22,subs:0},
+  // أخرى
+  {id:35,name:'كمال عبدالرحمن ابراهيم ابوجابر',ministry:'112307',subject:'رياضيات',type:'معلم أول',role:'teacher',user:'kamal.abujaber',pass:'km1234',maxLoad:22,subs:0},
+  // أعمال
+  {id:36,name:'علاء كمال طعمه الريحاني',ministry:'224533',subject:'أعمال',type:'معلم أول',role:'teacher',user:'alaa.alreihani',pass:'ar2234',maxLoad:22,subs:0},
+  {id:37,name:'محمد عبدالعزيز خليل شاعوت',ministry:'225725',subject:'أعمال',type:'معلم أول',role:'teacher',user:'moh.shaout',pass:'msh1234',maxLoad:22,subs:0},
+  {id:38,name:'اسامه عوده خليل عويس',ministry:'221177',subject:'أعمال',type:'خبير',role:'teacher',user:'osama.oweis',pass:'ow1234',maxLoad:20,subs:0},
+  {id:39,name:'حسن خلف شمالي العنزي',ministry:'222032',subject:'أعمال',type:'معلم أول',role:'teacher',user:'hasan.alanazi',pass:'ha1234',maxLoad:22,subs:0},
+  // تكنولوجيا
+  {id:40,name:'محمد عبد الباسط محمد الهبرات',ministry:'229131',subject:'تكنولوجيا',type:'معلم أول',role:'teacher',user:'moh.alhubarat',pass:'mh1234',maxLoad:22,subs:0},
+  {id:41,name:'هاشم حسين محمد صالح',ministry:'224345',subject:'تكنولوجيا',type:'خبير',role:'teacher',user:'hashem.saleh',pass:'hs1234',maxLoad:20,subs:0},
+  {id:42,name:'اشرف بيان فوزي زين الدين',ministry:'221153',subject:'تكنولوجيا',type:'خبير',role:'teacher',user:'ashraf.zaindeen',pass:'az1234',maxLoad:20,subs:0},
+  {id:43,name:'جهاد ابراهيم حسن النواس',ministry:'931044750',subject:'تكنولوجيا',type:'معلم أول',role:'teacher',user:'jihad.alnawas',pass:'jn1234',maxLoad:22,subs:0},
+  {id:44,name:'عصام خليل محمود ابو الهيجاء',ministry:'226342',subject:'تكنولوجيا',type:'معلم أول',role:'teacher',user:'issam.abuhijaa',pass:'ih1234',maxLoad:22,subs:0},
+];
+
+// ===================== CLASSES (الشعب من الصورة) =====================
+const CLASSES=[
+  'عاشر أ','عاشر ب','عاشر ج',
+  'تكنو 10','أول تكنو','أول هندسي','أول صحي','أول إدارة',
+  'أول اللقيمي أ','أول اللقيمي ب',
+  'أول الأكاديمي أ','أول الأكاديمي ب','أول الأكاديمي ج',
+  'ثاني تكنو بنية','ثاني عشر ج'
+];
+
+// ===================== SCHEDULE DATA (من الصورة، أسماء مصححة من الأكسل) =====================
+// المعلمون المختصرون في الجدول → الاسم الكامل من الأكسل:
+// ابراهيم = ابراهيم عبد الرحمن محمد الجردين (رياضيات) أو ابراهيم حسين سليمان ابودرويش (علوم)
+// أيمن / مرعي → لم يوجد في الأكسل — يُستبدل بأقرب معلم عربي
+// نوضح: معلمو الجدول من الأكسل بالتخصص:
+// رياضيات: الجردين، العرافين، ابومحفوظ، ابومحارب (محمد خالد)
+// عربية: الحجاج، المغير، شريتح، ابومحارب (عامر)
+// إنجليزي: ابوصبيح، السوالمه، الصوفي، دخل الله، العايدى
+// تربية إسلامية: الراجودي، السعدي، مقدادي، ابومحارب (هيثم)، القعير
+// اجتماعيات: الشرفات، بني خالد، الشبيب، النعيمي
+// علوم: الموالي، ابودرويش، الذهبي
+// مالية: صبيح، سليمان، الشموط
+// حاسوب: الحمد، الخطيب
+// تكنولوجيا: الهبرات، صالح، زين الدين، النواس، الهيجاء
+// أعمال: الريحاني، شاعوت، عويس، العنزي
+
+const T={
+  // اختصارات للجدول
+  RYD1:'ابراهيم الجردين',     // رياضيات
+  RYD2:'احمد العرافين',       // رياضيات
+  RYD3:'اشرف ابومحفوظ',       // رياضيات
+  RYD4:'محمد ابومحارب',       // رياضيات
+  ARB1:'اسيد الحجاج',         // عربية
+  ARB2:'اكرم المغير',         // عربية
+  ARB3:'سليمان شريتح',        // عربية
+  ARB4:'عامر ابومحارب',       // عربية
+  ENG1:'علاء ابوصبيح',        // إنجليزي
+  ENG2:'محمد السوالمه',       // إنجليزي
+  ENG3:'وليد الصوفي',         // إنجليزي
+  ENG4:'سلطان دخل الله',      // إنجليزي
+  ENG5:'محمد العايدى',        // إنجليزي
+  ISL1:'اسماعيل الراجودي',    // إسلامية
+  ISL2:'عدي السعدي',          // إسلامية
+  ISL3:'معاذ مقدادي',         // إسلامية
+  ISL4:'هيثم ابومحارب',       // إسلامية
+  ISL5:'أنور القعير',         // إسلامية
+  SOC1:'طلال الشرفات',        // اجتماعيات
+  SOC2:'محمد بني خالد',       // اجتماعيات
+  SOC3:'سلطان الشبيب',        // اجتماعيات
+  SOC4:'محيلان النعيمي',      // اجتماعيات
+  SCI1:'مهند الموالي',        // علوم
+  SCI2:'ابراهيم ابودرويش',    // علوم
+  SCI3:'معن الذهبي',          // علوم
+  FIN1:'خالد صبيح',           // مالية
+  FIN2:'احمد سليمان',         // مالية
+  FIN3:'عارف الشموط',         // مالية
+  COMP1:'فؤاد الحمد',         // حاسوب
+  COMP2:'فريد الخطيب',        // حاسوب
+  TECH1:'محمد الهبرات',       // تكنولوجيا
+  TECH2:'هاشم صالح',          // تكنولوجيا
+  TECH3:'اشرف زين الدين',     // تكنولوجيا
+  TECH4:'جهاد النواس',        // تكنولوجيا
+  TECH5:'عصام الهيجاء',       // تكنولوجيا
+  BUS1:'علاء الريحاني',       // أعمال
+  BUS2:'محمد شاعوت',          // أعمال
+  BUS3:'اسامه عويس',          // أعمال
+  BUS4:'حسن العنزي',          // أعمال
+  WTN:'كمال ابوجابر',         // تربية وطنية / أخرى
+  SPT:'ابراهيم الاتيم',       // رياضة
+};
+
+// جدول مبسط حسب الصورة — الأحد فقط كامل، باقي الأيام تمثيلية
+let baseSchedule={
+'الأحد':{
+  1:{'عاشر أ':{s:'اجتماعيات',t:T.SOC3},'عاشر ب':{s:'رياضيات',t:T.RYD1},'عاشر ج':{s:'تربية إسلامية',t:T.ISL2},'تكنو 10':{s:'أعمال',t:T.BUS1},'أول تكنو':{s:'مالية',t:T.FIN1},'أول هندسي':{s:'لغة عربية',t:T.ARB3},'أول صحي':{s:'تربية إسلامية',t:T.ISL4},'أول إدارة':{s:'تربية إسلامية',t:T.ISL2},'أول اللقيمي أ':{s:'رياضيات',t:T.RYD2},'أول اللقيمي ب':{s:'رياضيات',t:T.RYD4},'أول الأكاديمي أ':{s:'رياضيات',t:T.RYD1},'أول الأكاديمي ب':{s:'تربية إسلامية',t:T.ISL4},'أول الأكاديمي ج':{s:'لغة عربية',t:T.ARB1},'ثاني تكنو بنية':{s:'لغة إنجليزية',t:T.ENG2},'ثاني عشر ج':{s:'رياضيات',t:T.RYD2}},
+  2:{'عاشر أ':{s:'رياضيات',t:T.RYD1},'عاشر ب':{s:'لغة عربية',t:T.ARB3},'عاشر ج':{s:'اجتماعيات',t:T.SOC1},'تكنو 10':{s:'لغة عربية',t:T.ARB4},'أول تكنو':{s:'تكنولوجيا',t:T.TECH3},'أول هندسي':{s:'رياضيات',t:T.RYD4},'أول صحي':{s:'علوم',t:T.SCI1},'أول إدارة':{s:'لغة إنجليزية',t:T.ENG3},'أول اللقيمي أ':{s:'لغة عربية',t:T.ARB2},'أول اللقيمي ب':{s:'لغة عربية',t:T.ARB3},'أول الأكاديمي أ':{s:'لغة عربية',t:T.ARB1},'أول الأكاديمي ب':{s:'لغة إنجليزية',t:T.ENG1},'أول الأكاديمي ج':{s:'تربية إسلامية',t:T.ISL2},'ثاني تكنو بنية':{s:'مالية',t:T.FIN2},'ثاني عشر ج':{s:'لغة عربية',t:T.ARB2}},
+  3:{'عاشر أ':{s:'لغة إنجليزية',t:T.ENG2},'عاشر ب':{s:'تربية إسلامية',t:T.ISL4},'عاشر ج':{s:'لغة عربية',t:T.ARB4},'تكنو 10':{s:'تكنولوجيا',t:T.TECH5},'أول تكنو':{s:'رياضيات',t:T.RYD2},'أول هندسي':{s:'علوم',t:T.SCI1},'أول صحي':{s:'علوم',t:T.SCI3},'أول إدارة':{s:'أعمال',t:T.BUS2},'أول اللقيمي أ':{s:'لغة إنجليزية',t:T.ENG1},'أول اللقيمي ب':{s:'لغة إنجليزية',t:T.ENG3},'أول الأكاديمي أ':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC1},'أول الأكاديمي ج':{s:'رياضيات',t:T.RYD4},'ثاني تكنو بنية':{s:'أعمال',t:T.BUS3},'ثاني عشر ج':{s:'تربية إسلامية',t:T.ISL4}},
+  4:{'عاشر أ':{s:'تربية رياضية',t:T.SPT},'عاشر ب':{s:'اجتماعيات',t:T.SOC3},'عاشر ج':{s:'رياضيات',t:T.RYD4},'تكنو 10':{s:'رياضيات',t:T.RYD2},'أول تكنو':{s:'لغة عربية',t:T.ARB2},'أول هندسي':{s:'لغة إنجليزية',t:T.ENG2},'أول صحي':{s:'علوم',t:T.SCI2},'أول إدارة':{s:'مالية',t:T.FIN2},'أول اللقيمي أ':{s:'اجتماعيات',t:T.SOC1},'أول اللقيمي ب':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي أ':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي ب':{s:'رياضيات',t:T.RYD1},'أول الأكاديمي ج':{s:'لغة إنجليزية',t:T.ENG3},'ثاني تكنو بنية':{s:'رياضيات',t:T.RYD2},'ثاني عشر ج':{s:'اجتماعيات',t:T.SOC3}},
+  5:{'عاشر أ':{s:'أعمال',t:T.BUS4},'عاشر ب':{s:'لغة إنجليزية',t:T.ENG2},'عاشر ج':{s:'تربية رياضية',t:T.SPT},'تكنو 10':{s:'لغة إنجليزية',t:T.ENG3},'أول تكنو':{s:'اجتماعيات',t:T.SOC1},'أول هندسي':{s:'اجتماعيات',t:T.SOC4},'أول صحي':{s:'لغة عربية',t:T.ARB1},'أول إدارة':{s:'تكنولوجيا',t:T.TECH5},'أول اللقيمي أ':{s:'تربية إسلامية',t:T.ISL4},'أول اللقيمي ب':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي أ':{s:'لغة إنجليزية',t:T.ENG1},'أول الأكاديمي ب':{s:'لغة عربية',t:T.ARB2},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC1},'ثاني تكنو بنية':{s:'لغة عربية',t:T.ARB4},'ثاني عشر ج':{s:'لغة إنجليزية',t:T.ENG1}},
+  6:{'عاشر أ':{s:'لغة عربية',t:T.ARB1},'عاشر ب':{s:'أعمال',t:T.BUS4},'عاشر ج':{s:'لغة إنجليزية',t:T.ENG3},'تكنو 10':{s:'اجتماعيات',t:T.SOC3},'أول تكنو':{s:'تربية إسلامية',t:T.ISL2},'أول هندسي':{s:'أعمال',t:T.BUS3},'أول صحي':{s:'تكنولوجيا',t:T.TECH3},'أول إدارة':{s:'اجتماعيات',t:T.SOC1},'أول اللقيمي أ':{s:'رياضيات',t:T.RYD1},'أول اللقيمي ب':{s:'رياضيات',t:T.RYD2},'أول الأكاديمي أ':{s:'أعمال',t:T.BUS1},'أول الأكاديمي ب':{s:'أعمال',t:T.BUS1},'أول الأكاديمي ج':{s:'أعمال',t:T.BUS1},'ثاني تكنو بنية':{s:'تكنولوجيا',t:T.TECH3},'ثاني عشر ج':{s:'مالية',t:T.FIN1}},
+  7:{'عاشر أ':{s:'تربية إسلامية',t:T.ISL2},'عاشر ب':{s:'تربية رياضية',t:T.SPT},'عاشر ج':{s:'أعمال',t:T.BUS4},'تكنو 10':{s:'لغة عربية',t:T.ARB3},'أول تكنو':{s:'لغة إنجليزية',t:T.ENG1},'أول هندسي':{s:'أعمال',t:T.BUS4},'أول صحي':{s:'رياضيات',t:T.RYD4},'أول إدارة':{s:'لغة عربية',t:T.ARB2},'أول اللقيمي أ':{s:'أعمال',t:T.BUS4},'أول اللقيمي ب':{s:'أعمال',t:T.BUS4},'أول الأكاديمي أ':{s:'رياضيات',t:T.RYD2},'أول الأكاديمي ب':{s:'رياضيات',t:T.RYD4},'أول الأكاديمي ج':{s:'تربية رياضية',t:T.SPT},'ثاني تكنو بنية':{s:'لغة إنجليزية',t:T.ENG2},'ثاني عشر ج':{s:'أعمال',t:T.BUS3}},
+},
+'الاثنين':{
+  1:{'عاشر أ':{s:'لغة عربية',t:T.ARB1},'عاشر ب':{s:'اجتماعيات',t:T.SOC1},'عاشر ج':{s:'رياضيات',t:T.RYD2},'تكنو 10':{s:'رياضيات',t:T.RYD1},'أول تكنو':{s:'لغة إنجليزية',t:T.ENG1},'أول هندسي':{s:'تربية إسلامية',t:T.ISL2},'أول صحي':{s:'رياضيات',t:T.RYD2},'أول إدارة':{s:'اجتماعيات',t:T.SOC4},'أول اللقيمي أ':{s:'لغة إنجليزية',t:T.ENG2},'أول اللقيمي ب':{s:'لغة إنجليزية',t:T.ENG1},'أول الأكاديمي أ':{s:'اجتماعيات',t:T.SOC3},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC1},'أول الأكاديمي ج':{s:'رياضيات',t:T.RYD4},'ثاني تكنو بنية':{s:'أعمال',t:T.BUS2},'ثاني عشر ج':{s:'لغة إنجليزية',t:T.ENG3}},
+  2:{'عاشر أ':{s:'تربية إسلامية',t:T.ISL4},'عاشر ب':{s:'لغة إنجليزية',t:T.ENG2},'عاشر ج':{s:'لغة إنجليزية',t:T.ENG3},'تكنو 10':{s:'لغة إنجليزية',t:T.ENG1},'أول تكنو':{s:'تربية إسلامية',t:T.ISL2},'أول هندسي':{s:'رياضيات',t:T.RYD1},'أول صحي':{s:'لغة عربية',t:T.ARB4},'أول إدارة':{s:'لغة عربية',t:T.ARB3},'أول اللقيمي أ':{s:'تربية إسلامية',t:T.ISL4},'أول اللقيمي ب':{s:'رياضيات',t:T.RYD4},'أول الأكاديمي أ':{s:'لغة عربية',t:T.ARB2},'أول الأكاديمي ب':{s:'لغة عربية',t:T.ARB1},'أول الأكاديمي ج':{s:'تربية إسلامية',t:T.ISL2},'ثاني تكنو بنية':{s:'مالية',t:T.FIN1},'ثاني عشر ج':{s:'تربية إسلامية',t:T.ISL4}},
+  3:{'عاشر أ':{s:'اجتماعيات',t:T.SOC3},'عاشر ب':{s:'رياضيات',t:T.RYD4},'عاشر ج':{s:'تربية إسلامية',t:T.ISL2},'تكنو 10':{s:'تربية إسلامية',t:T.ISL4},'أول تكنو':{s:'رياضيات',t:T.RYD2},'أول هندسي':{s:'لغة عربية',t:T.ARB2},'أول صحي':{s:'تكنولوجيا',t:T.TECH3},'أول إدارة':{s:'مالية',t:T.FIN2},'أول اللقيمي أ':{s:'رياضيات',t:T.RYD1},'أول اللقيمي ب':{s:'لغة عربية',t:T.ARB4},'أول الأكاديمي أ':{s:'لغة إنجليزية',t:T.ENG3},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي ج':{s:'لغة عربية',t:T.ARB3},'ثاني تكنو بنية':{s:'رياضيات',t:T.RYD3},'ثاني عشر ج':{s:'اجتماعيات',t:T.SOC1}},
+  4:{'عاشر أ':{s:'لغة إنجليزية',t:T.ENG3},'عاشر ب':{s:'تربية رياضية',t:T.SPT},'عاشر ج':{s:'اجتماعيات',t:T.SOC1},'تكنو 10':{s:'اجتماعيات',t:T.SOC3},'أول تكنو':{s:'أعمال',t:T.BUS3},'أول هندسي':{s:'علوم',t:T.SCI3},'أول صحي':{s:'علوم',t:T.SCI1},'أول إدارة':{s:'تكنولوجيا',t:T.TECH5},'أول اللقيمي أ':{s:'اجتماعيات',t:T.SOC4},'أول اللقيمي ب':{s:'اجتماعيات',t:T.SOC1},'أول الأكاديمي أ':{s:'رياضيات',t:T.RYD4},'أول الأكاديمي ب':{s:'رياضيات',t:T.RYD2},'أول الأكاديمي ج':{s:'لغة إنجليزية',t:T.ENG2},'ثاني تكنو بنية':{s:'تكنولوجيا',t:T.TECH5},'ثاني عشر ج':{s:'رياضيات',t:T.RYD1}},
+  5:{'عاشر أ':{s:'رياضيات',t:T.RYD2},'عاشر ب':{s:'تربية إسلامية',t:T.ISL2},'عاشر ج':{s:'لغة عربية',t:T.ARB3},'تكنو 10':{s:'مالية',t:T.FIN1},'أول تكنو':{s:'لغة عربية',t:T.ARB1},'أول هندسي':{s:'مالية',t:T.FIN2},'أول صحي':{s:'علوم',t:T.SCI2},'أول إدارة':{s:'أعمال',t:T.BUS2},'أول اللقيمي أ':{s:'لغة عربية',t:T.ARB2},'أول اللقيمي ب':{s:'لغة عربية',t:T.ARB1},'أول الأكاديمي أ':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي ب':{s:'تربية إسلامية',t:T.ISL4},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC3},'ثاني تكنو بنية':{s:'لغة عربية',t:T.ARB3},'ثاني عشر ج':{s:'لغة عربية',t:T.ARB4}},
+  6:{'عاشر أ':{s:'مالية',t:T.FIN1},'عاشر ب':{s:'لغة عربية',t:T.ARB2},'عاشر ج':{s:'مالية',t:T.FIN2},'تكنو 10':{s:'تربية رياضية',t:T.SPT},'أول تكنو':{s:'مالية',t:T.FIN2},'أول هندسي':{s:'تربية رياضية',t:T.SPT},'أول صحي':{s:'أعمال',t:T.BUS3},'أول إدارة':{s:'لغة إنجليزية',t:T.ENG2},'أول اللقيمي أ':{s:'مالية',t:T.FIN1},'أول اللقيمي ب':{s:'مالية',t:T.FIN2},'أول الأكاديمي أ':{s:'لغة عربية',t:T.ARB4},'أول الأكاديمي ب':{s:'لغة إنجليزية',t:T.ENG1},'أول الأكاديمي ج':{s:'لغة عربية',t:T.ARB2},'ثاني تكنو بنية':{s:'أعمال',t:T.BUS3},'ثاني عشر ج':{s:'مالية',t:T.FIN1}},
+  7:{'عاشر أ':{s:'تكنولوجيا',t:T.TECH3},'عاشر ب':{s:'تكنولوجيا',t:T.TECH5},'عاشر ج':{s:'تكنولوجيا',t:T.TECH3},'تكنو 10':{s:'أعمال',t:T.BUS2},'أول تكنو':{s:'علوم',t:T.SCI1},'أول هندسي':{s:'تكنولوجيا',t:T.TECH5},'أول صحي':{s:'تربية إسلامية',t:T.ISL2},'أول إدارة':{s:'تربية رياضية',t:T.SPT},'أول اللقيمي أ':{s:'تكنولوجيا',t:T.TECH3},'أول اللقيمي ب':{s:'تكنولوجيا',t:T.TECH5},'أول الأكاديمي أ':{s:'مالية',t:T.FIN1},'أول الأكاديمي ب':{s:'مالية',t:T.FIN2},'أول الأكاديمي ج':{s:'مالية',t:T.FIN1},'ثاني تكنو بنية':{s:'اجتماعيات',t:T.SOC3},'ثاني عشر ج':{s:'تكنولوجيا',t:T.TECH3}},
+},
+'الثلاثاء':{
+  1:{'عاشر أ':{s:'رياضيات',t:T.RYD4},'عاشر ب':{s:'أعمال',t:T.BUS4},'عاشر ج':{s:'أعمال',t:T.BUS4},'تكنو 10':{s:'أعمال',t:T.BUS4},'أول تكنو':{s:'مالية',t:T.FIN1},'أول هندسي':{s:'علوم',t:T.SCI1},'أول صحي':{s:'رياضيات',t:T.RYD1},'أول إدارة':{s:'رياضيات',t:T.RYD2},'أول اللقيمي أ':{s:'أعمال',t:T.BUS4},'أول اللقيمي ب':{s:'أعمال',t:T.BUS4},'أول الأكاديمي أ':{s:'أعمال',t:T.BUS4},'أول الأكاديمي ب':{s:'أعمال',t:T.BUS4},'أول الأكاديمي ج':{s:'أعمال',t:T.BUS4},'ثاني تكنو بنية':{s:'لغة عربية',t:T.ARB2},'ثاني عشر ج':{s:'أعمال',t:T.BUS4}},
+  2:{'عاشر أ':{s:'اجتماعيات',t:T.SOC1},'عاشر ب':{s:'رياضيات',t:T.RYD2},'عاشر ج':{s:'اجتماعيات',t:T.SOC3},'تكنو 10':{s:'لغة عربية',t:T.ARB4},'أول تكنو':{s:'علوم',t:T.SCI3},'أول هندسي':{s:'لغة إنجليزية',t:T.ENG3},'أول صحي':{s:'علوم',t:T.SCI3},'أول إدارة':{s:'لغة إنجليزية',t:T.ENG1},'أول اللقيمي أ':{s:'رياضيات',t:T.RYD2},'أول اللقيمي ب':{s:'رياضيات',t:T.RYD1},'أول الأكاديمي أ':{s:'رياضيات',t:T.RYD4},'أول الأكاديمي ب':{s:'لغة عربية',t:T.ARB3},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC4},'ثاني تكنو بنية':{s:'رياضيات',t:T.RYD4},'ثاني عشر ج':{s:'رياضيات',t:T.RYD2}},
+  3:{'عاشر أ':{s:'لغة إنجليزية',t:T.ENG1},'عاشر ب':{s:'لغة عربية',t:T.ARB4},'عاشر ج':{s:'لغة إنجليزية',t:T.ENG2},'تكنو 10':{s:'رياضيات',t:T.RYD2},'أول تكنو':{s:'علوم',t:T.SCI1},'أول هندسي':{s:'رياضيات',t:T.RYD4},'أول صحي':{s:'لغة عربية',t:T.ARB2},'أول إدارة':{s:'تربية إسلامية',t:T.ISL4},'أول اللقيمي أ':{s:'لغة عربية',t:T.ARB1},'أول اللقيمي ب':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي أ':{s:'تربية إسلامية',t:T.ISL4},'أول الأكاديمي ب':{s:'رياضيات',t:T.RYD1},'أول الأكاديمي ج':{s:'لغة إنجليزية',t:T.ENG1},'ثاني تكنو بنية':{s:'لغة إنجليزية',t:T.ENG2},'ثاني عشر ج':{s:'لغة عربية',t:T.ARB1}},
+  4:{'عاشر أ':{s:'تربية إسلامية',t:T.ISL2},'عاشر ب':{s:'اجتماعيات',t:T.SOC3},'عاشر ج':{s:'تربية إسلامية',t:T.ISL4},'تكنو 10':{s:'تربية إسلامية',t:T.ISL2},'أول تكنو':{s:'لغة عربية',t:T.ARB3},'أول هندسي':{s:'اجتماعيات',t:T.SOC3},'أول صحي':{s:'اجتماعيات',t:T.SOC1},'أول إدارة':{s:'اجتماعيات',t:T.SOC3},'أول اللقيمي أ':{s:'تربية إسلامية',t:T.ISL2},'أول اللقيمي ب':{s:'لغة إنجليزية',t:T.ENG2},'أول الأكاديمي أ':{s:'لغة عربية',t:T.ARB4},'أول الأكاديمي ب':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي ج':{s:'رياضيات',t:T.RYD2},'ثاني تكنو بنية':{s:'تربية إسلامية',t:T.ISL4},'ثاني عشر ج':{s:'لغة إنجليزية',t:T.ENG2}},
+  5:{'عاشر أ':{s:'لغة عربية',t:T.ARB3},'عاشر ب':{s:'لغة إنجليزية',t:T.ENG3},'عاشر ج':{s:'لغة عربية',t:T.ARB1},'تكنو 10':{s:'أعمال',t:T.BUS3},'أول تكنو':{s:'لغة إنجليزية',t:T.ENG3},'أول هندسي':{s:'أعمال',t:T.BUS2},'أول صحي':{s:'لغة إنجليزية',t:T.ENG2},'أول إدارة':{s:'لغة عربية',t:T.ARB1},'أول اللقيمي أ':{s:'لغة إنجليزية',t:T.ENG3},'أول اللقيمي ب':{s:'لغة عربية',t:T.ARB2},'أول الأكاديمي أ':{s:'لغة إنجليزية',t:T.ENG1},'أول الأكاديمي ب':{s:'لغة إنجليزية',t:T.ENG3},'أول الأكاديمي ج':{s:'تربية رياضية',t:T.SPT},'ثاني تكنو بنية':{s:'اجتماعيات',t:T.SOC4},'ثاني عشر ج':{s:'اجتماعيات',t:T.SOC1}},
+  6:{'عاشر أ':{s:'تربية رياضية',t:T.SPT},'عاشر ب':{s:'تربية إسلامية',t:T.ISL4},'عاشر ج':{s:'تربية رياضية',t:T.SPT},'تكنو 10':{s:'تكنولوجيا',t:T.TECH5},'أول تكنو':{s:'علوم',t:T.SCI2},'أول هندسي':{s:'علوم',t:T.SCI3},'أول صحي':{s:'تربية رياضية',t:T.SPT},'أول إدارة':{s:'تكنولوجيا',t:T.TECH3},'أول اللقيمي أ':{s:'تربية رياضية',t:T.SPT},'أول اللقيمي ب':{s:'تربية رياضية',t:T.SPT},'أول الأكاديمي أ':{s:'تربية رياضية',t:T.SPT},'أول الأكاديمي ب':{s:'تربية رياضية',t:T.SPT},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC3},'ثاني تكنو بنية':{s:'تربية رياضية',t:T.SPT},'ثاني عشر ج':{s:'تربية إسلامية',t:T.ISL2}},
+  7:{'عاشر أ':{s:'جغرافيا',t:T.SOC2},'عاشر ب':{s:'جغرافيا',t:T.SOC2},'عاشر ج':{s:'جغرافيا',t:T.SOC2},'تكنو 10':{s:'تاريخ',t:T.SOC2},'أول تكنو':{s:'تربية رياضية',t:T.SPT},'أول هندسي':{s:'أعمال',t:T.BUS4},'أول صحي':{s:'أعمال',t:T.BUS2},'أول إدارة':{s:'رياضيات',t:T.RYD4},'أول اللقيمي أ':{s:'أعمال',t:T.BUS3},'أول اللقيمي ب':{s:'أعمال',t:T.BUS2},'أول الأكاديمي أ':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC3},'أول الأكاديمي ج':{s:'لغة عربية',t:T.ARB4},'ثاني تكنو بنية':{s:'رياضيات',t:T.RYD3},'ثاني عشر ج':{s:'تربية رياضية',t:T.SPT}},
+},
+'الأربعاء':{
+  1:{'عاشر أ':{s:'علوم',t:T.SCI1},'عاشر ب':{s:'لغة عربية',t:T.ARB1},'عاشر ج':{s:'علوم',t:T.SCI1},'تكنو 10':{s:'لغة إنجليزية',t:T.ENG3},'أول تكنو':{s:'اجتماعيات',t:T.SOC3},'أول هندسي':{s:'مالية',t:T.FIN1},'أول صحي':{s:'اجتماعيات',t:T.SOC4},'أول إدارة':{s:'تربية إسلامية',t:T.ISL4},'أول اللقيمي أ':{s:'اجتماعيات',t:T.SOC3},'أول اللقيمي ب':{s:'لغة عربية',t:T.ARB3},'أول الأكاديمي أ':{s:'لغة عربية',t:T.ARB2},'أول الأكاديمي ب':{s:'لغة عربية',t:T.ARB4},'أول الأكاديمي ج':{s:'لغة عربية',t:T.ARB1},'ثاني تكنو بنية':{s:'لغة إنجليزية',t:T.ENG1},'ثاني عشر ج':{s:'لغة عربية',t:T.ARB3}},
+  2:{'عاشر أ':{s:'علوم',t:T.SCI3},'عاشر ب':{s:'رياضيات',t:T.RYD1},'عاشر ج':{s:'اجتماعيات',t:T.SOC3},'تكنو 10':{s:'مالية',t:T.FIN1},'أول تكنو':{s:'لغة عربية',t:T.ARB4},'أول هندسي':{s:'علوم',t:T.SCI2},'أول صحي':{s:'لغة إنجليزية',t:T.ENG3},'أول إدارة':{s:'رياضيات',t:T.RYD1},'أول اللقيمي أ':{s:'لغة إنجليزية',t:T.ENG1},'أول اللقيمي ب':{s:'اجتماعيات',t:T.SOC1},'أول الأكاديمي أ':{s:'رياضيات',t:T.RYD2},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC1},'أول الأكاديمي ج':{s:'لغة إنجليزية',t:T.ENG3},'ثاني تكنو بنية':{s:'علوم',t:T.SCI3},'ثاني عشر ج':{s:'رياضيات',t:T.RYD4}},
+  3:{'عاشر أ':{s:'علوم',t:T.SCI2},'عاشر ب':{s:'اجتماعيات',t:T.SOC1},'عاشر ج':{s:'علوم',t:T.SCI2},'تكنو 10':{s:'أعمال',t:T.BUS3},'أول تكنو':{s:'رياضيات',t:T.RYD1},'أول هندسي':{s:'اجتماعيات',t:T.SOC1},'أول صحي':{s:'لغة عربية',t:T.ARB3},'أول إدارة':{s:'لغة عربية',t:T.ARB4},'أول اللقيمي أ':{s:'تربية إسلامية',t:T.ISL2},'أول اللقيمي ب':{s:'رياضيات',t:T.RYD2},'أول الأكاديمي أ':{s:'اجتماعيات',t:T.SOC1},'أول الأكاديمي ب':{s:'لغة إنجليزية',t:T.ENG2},'أول الأكاديمي ج':{s:'رياضيات',t:T.RYD1},'ثاني تكنو بنية':{s:'علوم',t:T.SCI1},'ثاني عشر ج':{s:'اجتماعيات',t:T.SOC4}},
+  4:{'عاشر أ':{s:'جغرافيا',t:T.SOC2},'عاشر ب':{s:'تكنولوجيا',t:T.TECH5},'عاشر ج':{s:'تكنولوجيا',t:T.TECH3},'تكنو 10':{s:'تربية إسلامية',t:T.ISL4},'أول تكنو':{s:'لغة إنجليزية',t:T.ENG2},'أول هندسي':{s:'لغة عربية',t:T.ARB1},'أول صحي':{s:'تربية إسلامية',t:T.ISL2},'أول إدارة':{s:'اجتماعيات',t:T.SOC1},'أول اللقيمي أ':{s:'رياضيات',t:T.RYD4},'أول اللقيمي ب':{s:'تربية إسلامية',t:T.ISL4},'أول الأكاديمي أ':{s:'لغة إنجليزية',t:T.ENG3},'أول الأكاديمي ب':{s:'رياضيات',t:T.RYD4},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC1},'ثاني تكنو بنية':{s:'لغة عربية',t:T.ARB1},'ثاني عشر ج':{s:'تربية إسلامية',t:T.ISL2}},
+  5:{'عاشر أ':{s:'تاريخ',t:T.SOC2},'عاشر ب':{s:'لغة إنجليزية',t:T.ENG1},'عاشر ج':{s:'تاريخ',t:T.SOC2},'تكنو 10':{s:'لغة عربية',t:T.ARB1},'أول تكنو':{s:'تكنولوجيا',t:T.TECH3},'أول هندسي':{s:'لغة إنجليزية',t:T.ENG1},'أول صحي':{s:'رياضيات',t:T.RYD2},'أول إدارة':{s:'لغة إنجليزية',t:T.ENG3},'أول اللقيمي أ':{s:'لغة عربية',t:T.ARB4},'أول اللقيمي ب':{s:'لغة إنجليزية',t:T.ENG3},'أول الأكاديمي أ':{s:'لغة عربية',t:T.ARB1},'أول الأكاديمي ب':{s:'لغة عربية',t:T.ARB2},'أول الأكاديمي ج':{s:'لغة عربية',t:T.ARB3},'ثاني تكنو بنية':{s:'علوم',t:T.SCI2},'ثاني عشر ج':{s:'لغة إنجليزية',t:T.ENG1}},
+  6:{'عاشر أ':{s:'لغة إنجليزية',t:T.ENG2},'عاشر ب':{s:'تكنولوجيا',t:T.TECH3},'عاشر ج':{s:'لغة إنجليزية',t:T.ENG1},'تكنو 10':{s:'علوم',t:T.SCI1},'أول تكنو':{s:'علوم',t:T.SCI3},'أول هندسي':{s:'رياضيات',t:T.RYD2},'أول صحي':{s:'تكنولوجيا',t:T.TECH5},'أول إدارة':{s:'أعمال',t:T.BUS4},'أول اللقيمي أ':{s:'مالية',t:T.FIN1},'أول اللقيمي ب':{s:'أعمال',t:T.BUS4},'أول الأكاديمي أ':{s:'مالية',t:T.FIN2},'أول الأكاديمي ب':{s:'مالية',t:T.FIN1},'أول الأكاديمي ج':{s:'مالية',t:T.FIN2},'ثاني تكنو بنية':{s:'أعمال',t:T.BUS4},'ثاني عشر ج':{s:'أعمال',t:T.BUS4}},
+  7:{'عاشر أ':{s:'أعمال',t:T.BUS3},'عاشر ب':{s:'أعمال',t:T.BUS2},'عاشر ج':{s:'أعمال',t:T.BUS3},'تكنو 10':{s:'اجتماعيات',t:T.SOC4},'أول تكنو':{s:'أعمال',t:T.BUS2},'أول هندسي':{s:'رياضيات',t:T.RYD1},'أول صحي':{s:'أعمال',t:T.BUS2},'أول إدارة':{s:'تكنولوجيا',t:T.TECH5},'أول اللقيمي أ':{s:'أعمال',t:T.BUS2},'أول اللقيمي ب':{s:'أعمال',t:T.BUS3},'أول الأكاديمي أ':{s:'أعمال',t:T.BUS3},'أول الأكاديمي ب':{s:'أعمال',t:T.BUS2},'أول الأكاديمي ج':{s:'أعمال',t:T.BUS3},'ثاني تكنو بنية':{s:'أعمال',t:T.BUS2},'ثاني عشر ج':{s:'أعمال',t:T.BUS3}},
+},
+'الخميس':{
+  1:{'عاشر أ':{s:'لغة عربية',t:T.ARB3},'عاشر ب':{s:'لغة إنجليزية',t:T.ENG3},'عاشر ج':{s:'لغة عربية',t:T.ARB2},'تكنو 10':{s:'اجتماعيات',t:T.SOC1},'أول تكنو':{s:'رياضيات',t:T.RYD4},'أول هندسي':{s:'لغة عربية',t:T.ARB4},'أول صحي':{s:'لغة إنجليزية',t:T.ENG1},'أول إدارة':{s:'لغة عربية',t:T.ARB1},'أول اللقيمي أ':{s:'لغة عربية',t:T.ARB3},'أول اللقيمي ب':{s:'لغة عربية',t:T.ARB4},'أول الأكاديمي أ':{s:'لغة إنجليزية',t:T.ENG2},'أول الأكاديمي ب':{s:'لغة إنجليزية',t:T.ENG3},'أول الأكاديمي ج':{s:'لغة إنجليزية',t:T.ENG2},'ثاني تكنو بنية':{s:'علوم',t:T.SCI1},'ثاني عشر ج':{s:'لغة عربية',t:T.ARB2}},
+  2:{'عاشر أ':{s:'رياضيات',t:T.RYD1},'عاشر ب':{s:'تربية إسلامية',t:T.ISL2},'عاشر ج':{s:'رياضيات',t:T.RYD2},'تكنو 10':{s:'لغة عربية',t:T.ARB2},'أول تكنو':{s:'تربية إسلامية',t:T.ISL4},'أول هندسي':{s:'علوم',t:T.SCI3},'أول صحي':{s:'رياضيات',t:T.RYD4},'أول إدارة':{s:'رياضيات',t:T.RYD2},'أول اللقيمي أ':{s:'تربية إسلامية',t:T.ISL4},'أول اللقيمي ب':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي أ':{s:'رياضيات',t:T.RYD1},'أول الأكاديمي ب':{s:'رياضيات',t:T.RYD2},'أول الأكاديمي ج':{s:'رياضيات',t:T.RYD4},'ثاني تكنو بنية':{s:'رياضيات',t:T.RYD1},'ثاني عشر ج':{s:'رياضيات',t:T.RYD2}},
+  3:{'عاشر أ':{s:'تكنولوجيا',t:T.TECH3},'عاشر ب':{s:'علوم',t:T.SCI3},'عاشر ج':{s:'تكنولوجيا',t:T.TECH5},'تكنو 10':{s:'رياضيات',t:T.RYD4},'أول تكنو':{s:'اجتماعيات',t:T.SOC4},'أول هندسي':{s:'اجتماعيات',t:T.SOC3},'أول صحي':{s:'علوم',t:T.SCI3},'أول إدارة':{s:'لغة إنجليزية',t:T.ENG1},'أول اللقيمي أ':{s:'اجتماعيات',t:T.SOC1},'أول اللقيمي ب':{s:'اجتماعيات',t:T.SOC3},'أول الأكاديمي أ':{s:'اجتماعيات',t:T.SOC3},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC1},'ثاني تكنو بنية':{s:'تكنولوجيا',t:T.TECH3},'ثاني عشر ج':{s:'تكنولوجيا',t:T.TECH5}},
+  4:{'عاشر أ':{s:'اجتماعيات',t:T.SOC3},'عاشر ب':{s:'علوم',t:T.SCI1},'عاشر ج':{s:'اجتماعيات',t:T.SOC4},'تكنو 10':{s:'تكنولوجيا',t:T.TECH3},'أول تكنو':{s:'علوم',t:T.SCI1},'أول هندسي':{s:'تربية إسلامية',t:T.ISL4},'أول صحي':{s:'لغة عربية',t:T.ARB1},'أول إدارة':{s:'مالية',t:T.FIN1},'أول اللقيمي أ':{s:'لغة إنجليزية',t:T.ENG3},'أول اللقيمي ب':{s:'لغة إنجليزية',t:T.ENG1},'أول الأكاديمي أ':{s:'تربية إسلامية',t:T.ISL4},'أول الأكاديمي ب':{s:'تربية إسلامية',t:T.ISL2},'أول الأكاديمي ج':{s:'تربية إسلامية',t:T.ISL4},'ثاني تكنو بنية':{s:'لغة عربية',t:T.ARB4},'ثاني عشر ج':{s:'اجتماعيات',t:T.SOC3}},
+  5:{'عاشر أ':{s:'علوم',t:T.SCI2},'عاشر ب':{s:'اجتماعيات',t:T.SOC3},'عاشر ج':{s:'علوم',t:T.SCI2},'تكنو 10':{s:'لغة إنجليزية',t:T.ENG2},'أول تكنو':{s:'لغة عربية',t:T.ARB2},'أول هندسي':{s:'لغة إنجليزية',t:T.ENG2},'أول صحي':{s:'اجتماعيات',t:T.SOC1},'أول إدارة':{s:'اجتماعيات',t:T.SOC3},'أول اللقيمي أ':{s:'مالية',t:T.FIN2},'أول اللقيمي ب':{s:'مالية',t:T.FIN1},'أول الأكاديمي أ':{s:'مالية',t:T.FIN2},'أول الأكاديمي ب':{s:'مالية',t:T.FIN2},'أول الأكاديمي ج':{s:'مالية',t:T.FIN1},'ثاني تكنو بنية':{s:'علوم',t:T.SCI3},'ثاني عشر ج':{s:'مالية',t:T.FIN2}},
+  6:{'عاشر أ':{s:'مالية',t:T.FIN2},'عاشر ب':{s:'علوم',t:T.SCI2},'عاشر ج':{s:'مالية',t:T.FIN2},'تكنو 10':{s:'تربية رياضية',t:T.SPT},'أول تكنو':{s:'لغة إنجليزية',t:T.ENG3},'أول هندسي':{s:'علوم',t:T.SCI1},'أول صحي':{s:'مالية',t:T.FIN1},'أول إدارة':{s:'لغة عربية',t:T.ARB2},'أول اللقيمي أ':{s:'لغة عربية',t:T.ARB1},'أول اللقيمي ب':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي أ':{s:'اجتماعيات',t:T.SOC4},'أول الأكاديمي ب':{s:'اجتماعيات',t:T.SOC3},'أول الأكاديمي ج':{s:'اجتماعيات',t:T.SOC4},'ثاني تكنو بنية':{s:'مالية',t:T.FIN2},'ثاني عشر ج':{s:'علوم',t:T.SCI2}},
+  7:{'عاشر أ':{s:'أعمال',t:T.BUS3},'عاشر ب':{s:'أعمال',t:T.BUS2},'عاشر ج':{s:'أعمال',t:T.BUS2},'تكنو 10':{s:'لغة عربية',t:T.ARB3},'أول تكنو':{s:'أعمال',t:T.BUS4},'أول هندسي':{s:'أعمال',t:T.BUS3},'أول صحي':{s:'أعمال',t:T.BUS4},'أول إدارة':{s:'أعمال',t:T.BUS2},'أول اللقيمي أ':{s:'أعمال',t:T.BUS4},'أول اللقيمي ب':{s:'أعمال',t:T.BUS4},'أول الأكاديمي أ':{s:'أعمال',t:T.BUS4},'أول الأكاديمي ب':{s:'أعمال',t:T.BUS4},'أول الأكاديمي ج':{s:'أعمال',t:T.BUS4},'ثاني تكنو بنية':{s:'أعمال',t:T.BUS4},'ثاني عشر ج':{s:'أعمال',t:T.BUS4}},
+},
+};
+
+let dailyChanges={},absencesData=[],workScheduleData=[],swapLog=[],currentDay='الأحد',editMode=false,currentUser=null;
+const notificationsData=[{id:1,title:'مرحبًا بنظام عكرمة',body:'تم تحميل بيانات المعلمين من ملف الأكسل بنجاح.',type:'success',read:false,time:'الآن'}];
+const avatarColors=['#1a6fb5','#6d28d9','#0f766e','#b45309','#b91c1c','#0c4a6e','#065f46','#581c87'];
+
+// ===================== AUTH =====================
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  if(USERS[u]&&USERS[u].pass===p){currentUser={username:u,...USERS[u]};initApp();}
+  else{document.getElementById('login-error').style.display='block';}
+}
+function quickLogin(u,p){document.getElementById('login-user').value=u;document.getElementById('login-pass').value=p;doLogin();}
+function logout(){currentUser=null;document.getElementById('app').style.display='none';document.getElementById('login-page').style.display='flex';document.getElementById('login-user').value='';document.getElementById('login-pass').value='';document.getElementById('login-error').style.display='none';}
+
+function initApp(){
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').style.display='block';
+  const av=document.getElementById('sidebar-avatar');
+  const firstChar=currentUser.name.replace(/\s+\S+$/,'').slice(-1)||currentUser.name[0];
+  av.textContent=firstChar;
+  av.style.background=currentUser.color||'#1a6fb5';av.style.color='#fff';
+  document.getElementById('sidebar-name').textContent=currentUser.name;
+  const rb=document.getElementById('sidebar-role-badge');
+  rb.textContent=ROLE_NAMES[currentUser.role]||'معلم';
+  rb.className='role-'+currentUser.role;
+  applyPermissions();setDateDisplay();fillTeacherSelects();
+  buildScheduleTable(currentDay);buildTodayMini();buildWorkSchedTable();buildTeachersGrid();renderNotifications();renderAbsences();renderSwapLog();
+}
+
+function applyPermissions(){
+  const r=currentUser.role;
+  const isAdmin=r==='admin';const isAsstUp=isAdmin||r==='assistant';const isDutyUp=isAsstUp||r==='first';
+  document.querySelectorAll('.admin-only').forEach(e=>e.style.display=isAdmin?'flex':'none');
+  document.querySelectorAll('.assistant-up').forEach(e=>e.style.display=isAsstUp?'flex':'none');
+  document.querySelectorAll('.duty-up').forEach(e=>e.style.display=isDutyUp?'flex':'none');
+}
+
+function setDateDisplay(){
+  const days=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const now=new Date();
+  document.getElementById('current-date').textContent=days[now.getDay()]+' '+now.toLocaleDateString('ar-JO');
+  document.getElementById('today-day-name').textContent=days[now.getDay()];
+}
+
+// ===================== SCHEDULE =====================
+function getSubjectClass(s){
+  if(!s)return's-other';
+  if(s.includes('رياض'))return's-math';
+  if(s.includes('عربية'))return's-arabic';
+  if(s.includes('إنجليز')||s.includes('انجليز'))return's-english';
+  if(s.includes('علوم'))return's-science';
+  if(s.includes('اجتماع')||s.includes('تاريخ')||s.includes('جغرافيا'))return's-social';
+  if(s.includes('إسلام')||s.includes('ديني'))return's-islamic';
+  if(s.includes('تكنولوجيا')||s.includes('حاسوب'))return's-tech';
+  if(s.includes('مالية'))return's-finance';
+  if(s.includes('أعمال')||s.includes('اعمال'))return's-mgmt';
+  if(s.includes('رياضية')||s.includes('رياضة'))return's-skills';
+  return's-other';
+}
+
+function buildScheduleTable(day,search=''){
+  currentDay=day;
+  const tbl=document.getElementById('main-schedule-table');if(!tbl)return;
+  const dayData=baseSchedule[day]||{};const changes=dailyChanges[day]||{};
+  let header='<thead><tr><th>الحصة / الشعبة</th>';
+  CLASSES.forEach(c=>header+=`<th>${c}</th>`);header+='</tr></thead>';
+  let body='<tbody>';
+  PERIODS.forEach(p=>{
+    body+=`<tr><td class="period-hdr" style="min-width:65px;font-size:10px;text-align:center;">ح${p.n}<br><span style="font-size:9px;">${p.t}</span></td>`;
+    CLASSES.forEach(cl=>{
+      const key=`${p.n}|${cl}`;const chg=changes[key];const orig=(dayData[p.n]||{})[cl];const cell=chg||orig;
+      if(!cell){body+=`<td><div class="cell empty" style="min-height:46px;">—</div></td>`;return;}
+      const sc=getSubjectClass(cell.s);const isSwap=chg&&chg.ct==='swap';const isWork=chg&&chg.ct==='work';
+      const tag=isSwap?`<div class="cell-tag tag-swap">تبديل</div>`:isWork?`<div class="cell-tag tag-work">إشغال</div>`:'';
+      const tName=cell.t||'—';
+      if(search&&!cell.s.includes(search)&&!tName.includes(search)){body+=`<td><div class="cell empty" style="opacity:.3;min-height:46px;">—</div></td>`;return;}
+      const canEdit=currentUser&&currentUser.role!=='teacher';
+      body+=`<td><div class="cell ${sc}" style="min-height:46px;" ${canEdit?`onclick="openCellMenu('${day}',${p.n},'${cl.replace(/'/g,"\\'")}')"`:''}>${tag}
+        <div class="cell-subject">${cell.s}</div>
+        <div class="cell-teacher">${tName}</div>
+      </div></td>`;
+    });body+='</tr>';
+  });body+='</tbody>';
+  tbl.innerHTML=header+body;
+}
+
+function buildTodayMini(){
+  const dayNames=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+  const d=dayNames[new Date().getDay()]||'الأحد';
+  const dayData=baseSchedule[d]||{};
+  let html='<table style="width:100%;border-collapse:collapse;font-size:11px;">';
+  html+='<tr style="background:var(--blue-soft);"><th style="padding:6px 8px;border:1px solid var(--border);">الحصة</th><th style="padding:6px 8px;border:1px solid var(--border);">الوقت</th><th style="padding:6px 8px;border:1px solid var(--border);">ملخص الشعب</th></tr>';
+  PERIODS.forEach(p=>{
+    const cells=dayData[p.n]||{};
+    const summary=Object.entries(cells).slice(0,3).map(([cl,v])=>`${cl}: ${v.s}`).join(' | ');
+    html+=`<tr><td style="padding:5px 8px;border:1px solid var(--border);font-weight:700;text-align:center;">ح${p.n}</td><td style="padding:5px 8px;border:1px solid var(--border);color:var(--text2);">${p.t}</td><td style="padding:5px 8px;border:1px solid var(--border);color:var(--text2);font-size:10px;">${summary||'—'}</td></tr>`;
+  });html+='</table>';
+  const el=document.getElementById('today-mini');if(el)el.innerHTML=html;
+}
+
+function filterDay(day,el){
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');buildScheduleTable(day);
+}
+
+function toggleEditMode(){
+  editMode=!editMode;
+  const btn=document.getElementById('edit-schedule-btn');
+  if(btn){btn.textContent=editMode?'🔒 إيقاف التعديل':'✏️ تفعيل التعديل';btn.className=editMode?'btn btn-sm btn-danger':'btn btn-sm btn-primary';}
+  buildScheduleTable(currentDay);
+  showToast(editMode?'وضع التعديل مفعّل':'تم إيقاف التعديل',editMode?'warning':'info');
+}
+
+function openCellMenu(day,period,cls){
+  const dayData=baseSchedule[day]||{};const changes=dailyChanges[day]||{};
+  const key=`${period}|${cls}`;const chg=changes[key];const orig=(dayData[period]||{})[cls];const cell=chg||orig;
+  const allTeachers=teachersData.filter(t=>t.role!=='admin');
+  const tOpts=allTeachers.map(t=>`<option value="${t.name}" ${cell&&cell.t===t.name?'selected':''}>${t.name} — ${t.subject}</option>`).join('');
+  const others=CLASSES.filter(c=>c!==cls).map(c=>{
+    const cd=(dayData[period]||{})[c];
+    return cd?`<option value="${c}">${c}: ${cd.s} — ${cd.t}</option>`:'';
+  }).join('');
+  document.getElementById('cell-menu-content').innerHTML=`<h2 style="display:flex;justify-content:space-between;">تعديل حصة — ${cls} / ح${period}<button class="modal-close" style="position:static;margin-right:auto;" onclick="closeModal('cell-menu-modal')">✕</button></h2>
+    <div style="background:var(--bg3);border-radius:8px;padding:10px;margin-bottom:14px;font-size:12px;color:var(--text2);"><strong>المادة:</strong> ${cell?.s||'—'} | <strong>المعلم الحالي:</strong> ${cell?.t||'—'}</div>
+    <div class="form-group"><label>تغيير المعلم (إشغال)</label><select id="cm-t" class="form-group input" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-family:Cairo,sans-serif;">${tOpts}</select></div>
+    <button class="btn btn-success" style="width:100%;justify-content:center;margin-bottom:10px;" onclick="applyCellWork('${day}',${period},'${cls.replace(/'/g,"\\'")}')">✅ تطبيق كإشغال</button>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <div class="form-group"><label>تبديل مع شعبة أخرى في نفس الحصة</label>
+    <select id="cm-swap" style="width:100%;padding:9px;border:1.5px solid var(--border);border-radius:6px;font-family:Cairo,sans-serif;"><option value="">اختر الشعبة...</option>${others}</select></div>
+    <button class="btn btn-amber" style="width:100%;justify-content:center;" onclick="applyCellSwap('${day}',${period},'${cls.replace(/'/g,"\\'")}')">🔄 تبديل</button>
+    ${chg?`<hr style="margin:10px 0;"><button class="btn btn-danger btn-sm" style="width:100%;justify-content:center;" onclick="removeChange('${day}',${period},'${cls.replace(/'/g,"\\'")}')">↺ إرجاع للأصل</button>`:''}`;
+  openModal('cell-menu-modal');
+}
+
+function applyCellWork(day,period,cls){
+  const tid=document.getElementById('cm-t')?.value;if(!tid)return;
+  if(!dailyChanges[day])dailyChanges[day]={};
+  const key=`${period}|${cls}`;const orig=(baseSchedule[day]?.[period]||{})[cls];if(!orig)return;
+  dailyChanges[day][key]={...orig,t:tid,ct:'work'};
+  swapLog.unshift({id:Date.now(),type:'إشغال',day,period,cls,teacher:tid,time:fmtTime()});
+  addNotif('إشغال منفذ',`تم تعيين ${tid} إشغالاً في ${cls} ح${period} — ${day}`,'success');
+  closeModal('cell-menu-modal');buildScheduleTable(day);renderSwapLog();
+  showToast('✅ تم تطبيق الإشغال','success');
+}
+
+function applyCellSwap(day,period,cls1){
+  const cls2=document.getElementById('cm-swap')?.value;if(!cls2)return;
+  if(!dailyChanges[day])dailyChanges[day]={};
+  const orig1=(baseSchedule[day]?.[period]||{})[cls1];const orig2=(baseSchedule[day]?.[period]||{})[cls2];
+  if(!orig1||!orig2){showToast('لا يمكن التبديل — بيانات ناقصة','warning');return;}
+  dailyChanges[day][`${period}|${cls1}`]={...orig2,ct:'swap'};
+  dailyChanges[day][`${period}|${cls2}`]={...orig1,ct:'swap'};
+  swapLog.unshift({id:Date.now(),type:'تبديل',day,period,cls:`${cls1} ↔ ${cls2}`,teacher:`${orig1.t} ↔ ${orig2.t}`,time:fmtTime()});
+  addNotif('تبديل منفذ',`تم تبديل حصتي ${cls1} و ${cls2} في ح${period} — ${day}`,'success');
+  closeModal('cell-menu-modal');buildScheduleTable(day);renderSwapLog();showToast('✅ تم التبديل','success');
+}
+
+function removeChange(day,period,cls){
+  if(dailyChanges[day])delete dailyChanges[day][`${period}|${cls}`];
+  closeModal('cell-menu-modal');buildScheduleTable(day);showToast('تم إرجاع الحصة للأصل','info');
+}
+
+// ===================== SWAP PAGE =====================
+function fillTeacherSelects(){
+  const actv=teachersData.filter(t=>t.role!=='admin');
+  const opts='<option value="">اختر المعلم</option>'+actv.map(t=>`<option value="${t.name}">${t.name} — ${t.subject}</option>`).join('');
+  ['swap-teacher1','swap-teacher2','cover-teacher','wa-teacher'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+  const absEl=document.getElementById('abs-teacher');
+  if(absEl)absEl.innerHTML='<option value="">اختر المعلم</option>'+actv.map(t=>`<option value="${t.id}">${t.name} — ${t.subject}</option>`).join('');
+  const csEl=document.getElementById('cover-sub-teacher');
+  if(csEl)csEl.innerHTML='<option value="">اختر البديل</option>'+actv.map(t=>`<option value="${t.name}">${t.name} — ${t.subject}</option>`).join('');
+}
+
+// executeSwap replaced by new_features.js
+
+function findLesson(day,period,teacher){
+  const d=(baseSchedule[day]||{})[period]||{};
+  for(const[cls,cell] of Object.entries(d)){if(cell.t===teacher)return{cls,cell};}return null;
+}
+
+function executeCover(){
+  const d=document.getElementById('cover-day').value,p=document.getElementById('cover-period').value,t=document.getElementById('cover-teacher').value;
+  if(!d||!p||!t){showToast('يرجى اختيار جميع الحقول','warning');return;}
+  swapLog.unshift({id:Date.now(),type:'إشغال',day:d,period:parseInt(p),cls:'من جدول الإشغال',teacher:t,time:fmtTime()});
+  addNotif('إشغال منفذ',`تم تعيين ${t} للإشغال في ح${p} — ${d}`,'success');
+  renderSwapLog();showToast(`✅ تم تعيين ${t} للإشغال`,'success');
+}
+
+function clearSwap(){['swap-day1','swap-period1','swap-teacher1','swap-day2','swap-period2','swap-teacher2'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});}
+
+function renderSwapLog(){
+  const el=document.getElementById('swap-log');if(!el)return;
+  if(!swapLog.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--text3);">لا توجد تبديلات بعد</div>';return;}
+  el.innerHTML=swapLog.map(e=>`<div class="notif-item">
+    <div class="notif-icon" style="background:${e.type==='تبديل'?'var(--amber-light)':'var(--green-light)'};">${e.type==='تبديل'?'🔄':'👤'}</div>
+    <div class="notif-body" style="flex:1"><p>${e.type}: ${e.cls} — ح${e.period} / ${e.day}</p><span>${e.teacher} · ${e.time}</span></div>
+    <button class="btn btn-xs btn-danger" onclick="swapLog=swapLog.filter(x=>x.id!==${e.id});renderSwapLog()">✕</button>
+  </div>`).join('');
+}
+function clearSwapLog(){swapLog=[];renderSwapLog();}
+
+// ===================== WORK SCHEDULE =====================
+function buildWorkSchedTable(){
+  const tbl=document.getElementById('work-sched-table');if(!tbl)return;
+  let h='<thead><tr><th>الحصة / الوقت</th>';DAYS.forEach(d=>h+=`<th>${d}</th>`);h+='</tr></thead><tbody>';
+  PERIODS.forEach(p=>{
+    h+=`<tr><td style="background:var(--blue-soft);font-weight:700;font-size:11px;color:var(--blue3);text-align:center;padding:6px;">ح${p.n}<br><small>${p.t}</small></td>`;
+    DAYS.forEach(d=>{
+      const entries=workScheduleData.filter(w=>w.day===d&&w.period===p.n);
+      const cells=entries.map(w=>`<div class="work-entry" onclick="removeWorkEntry(${w.id})">${w.teacher}<span class="del"> ✕</span></div>`).join('');
+      h+=`<td>${cells}<div class="work-cell-add" onclick="quickAddWork('${d}',${p.n})">+ إضافة</div></td>`;
+    });h+='</tr>';
+  });h+='</tbody>';tbl.innerHTML=h;
+}
+function quickAddWork(day,period){document.getElementById('wa-day').value=day;document.getElementById('wa-period').value=period;openModal('work-add-modal');}
+function saveWorkEntry(){
+  const day=document.getElementById('wa-day').value,period=parseInt(document.getElementById('wa-period').value),teacher=document.getElementById('wa-teacher').value;
+  if(!teacher){showToast('اختر معلمًا','warning');return;}
+  workScheduleData.push({id:Date.now(),day,period,teacher});buildWorkSchedTable();closeModal('work-add-modal');showToast('✅ تمت الإضافة','success');
+}
+function removeWorkEntry(id){workScheduleData=workScheduleData.filter(w=>w.id!==id);buildWorkSchedTable();}
+function clearWorkSched(){if(confirm('مسح جدول الإشغال كله؟')){workScheduleData=[];buildWorkSchedTable();showToast('تم المسح','info');}}
+
+// ===================== ABSENCES =====================
+function saveAbsence(){
+  const tid=document.getElementById('abs-teacher').value,date=document.getElementById('abs-date').value,notes=document.getElementById('abs-notes').value;
+  const periods=[...document.querySelectorAll('#abs-periods-check input:checked')].map(c=>c.value);
+  if(!tid||!periods.length){showToast('اختر المعلم والحصات','warning');return;}
+  const teacher=teachersData.find(t=>t.id==tid);
+  absencesData.unshift({id:Date.now(),teacher:teacher?.name||'—',date:date||new Date().toLocaleDateString('ar-JO'),periods,notes,covered:false,substitute:null});
+  document.getElementById('abs-badge').textContent=absencesData.filter(a=>!a.covered).length;
+  renderAbsences();closeModal('absent-modal');addNotif('غياب مسجل',`${teacher?.name} غائب — الحصص: ${periods.join('، ')}`,'warning');showToast('✅ تم تسجيل الغياب','success');
+}
+function renderAbsences(){
+  const el=document.getElementById('absences-list');if(!el)return;
+  if(!absencesData.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);">لا توجد غيابات مسجلة</div>';return;}
+  const canM=currentUser&&currentUser.role!=='teacher';
+  el.innerHTML=absencesData.map(a=>`<div class="abs-item ${a.covered?'covered':'uncovered'}">
+    <div style="font-size:20px;">${a.covered?'✅':'🔴'}</div>
+    <div style="flex:1;"><div style="font-weight:700;font-size:13px;">${a.teacher}</div>
+    <div style="font-size:11px;color:var(--text2);margin-top:2px;">التاريخ: ${a.date} · الحصص: ${a.periods.join('، ')}</div>
+    ${a.covered?`<div style="font-size:11px;color:var(--green);">✅ البديل: ${a.substitute}</div>`:'<div style="font-size:11px;color:var(--red);">⚠️ لم تُعوَّض بعد</div>'}
+    ${a.notes?`<div style="font-size:10px;color:var(--text3);">${a.notes}</div>`:''}</div>
+    ${canM&&!a.covered?`<button class="btn btn-sm btn-primary" onclick="openCoverAbs(${a.id})">🔄 تعيين بديل</button>`:''}
+    ${canM?`<button class="btn btn-xs btn-danger" onclick="absencesData=absencesData.filter(x=>x.id!==${a.id});document.getElementById('abs-badge').textContent=absencesData.filter(a=>!a.covered).length;renderAbsences();">✕</button>`:''}
+  </div>`).join('');
+}
+function openCoverAbs(id){
+  const absEl=document.getElementById('cover-abs-id');
+  if(absEl)absEl.innerHTML=absencesData.map(a=>`<option value="${a.id}" ${a.id===id?'selected':''}>${a.teacher} — ${a.date}</option>`).join('');
+  openModal('cover-modal');
+}
+function saveCover(){
+  const absId=parseInt(document.getElementById('cover-abs-id').value),sub=document.getElementById('cover-sub-teacher').value;
+  const abs=absencesData.find(a=>a.id===absId);
+  if(!abs||!sub){showToast('اختر الغياب والبديل','warning');return;}
+  abs.covered=true;abs.substitute=sub;
+  document.getElementById('abs-badge').textContent=absencesData.filter(a=>!a.covered).length;
+  renderAbsences();closeModal('cover-modal');addNotif('تعيين بديل',`تم تعيين ${sub} بديلاً لـ ${abs.teacher}`,'success');showToast(`✅ تم تعيين ${sub}`,'success');
+}
+
+// ===================== TEACHERS =====================
+function buildTeachersGrid(search='',subjFilter=''){
+  const grid=document.getElementById('teachers-grid');if(!grid)return;
+  const canEdit=currentUser&&(currentUser.role==='admin'||currentUser.role==='assistant');
+  let list=teachersData.filter(t=>t.role!=='admin');
+  if(search)list=list.filter(t=>t.name.includes(search)||t.subject.includes(search));
+  if(subjFilter)list=list.filter(t=>t.subject===subjFilter);
+  grid.innerHTML=list.map((t,i)=>{
+    const color=avatarColors[i%avatarColors.length];
+    const rClass={admin:'tag-blue',assistant:'tag-purple',first:'tag-teal',teacher:'tag-green'}[t.role]||'tag-green';
+    const tClass={قائد:'tag-blue',خبير:'tag-purple','معلم أول':'tag-amber'}[t.type]||'tag-amber';
+    const initials=t.name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('');
+    return`<div class="teacher-card">
+      <div class="teacher-header">
+        <div class="teacher-avatar" style="background:${color};color:#fff;">${initials}</div>
+        <div><div class="teacher-name">${t.name}</div><div class="teacher-subject">${t.subject}</div></div>
+      </div>
+      <div class="teacher-meta">
+        <span class="tag ${rClass}">${ROLE_NAMES[t.role]||'معلم'}</span>
+        <span class="tag ${tClass}">${t.type||'معلم أول'}</span>
+        ${t.ministry?`<span class="tag tag-blue">رقم وزاري: ${t.ministry}</span>`:''}
+      </div>
+      <div class="credentials-box">
+        <div class="cred-row"><span class="cred-label">👤 المستخدم:</span><span class="cred-value">${t.user}</span></div>
+        <div class="cred-row"><span class="cred-label">🔑 كلمة المرور:</span><span class="cred-value">${t.pass}</span></div>
+        <div class="cred-row"><span class="cred-label">📊 الحد الأعلى:</span><span class="cred-value">${t.maxLoad} حصة</span></div>
+      </div>
+      <div class="teacher-actions">
+        ${canEdit?`<button class="btn btn-sm btn-secondary" onclick="editTeacher(${t.id})">✏️ تعديل</button>`:''}
+        ${currentUser?.role==='admin'?`<button class="btn btn-sm btn-danger" onclick="if(confirm('حذف '+teachersData.find(x=>x.id===${t.id})?.name+'؟')){teachersData=teachersData.filter(x=>x.id!==${t.id});buildTeachersGrid();fillTeacherSelects();showToast('تم الحذف','warning');}">🗑</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function editTeacher(id){
+  const t=teachersData.find(x=>x.id===id);if(!t)return;
+  document.getElementById('teacher-edit-id').value=id;
+  document.getElementById('teacher-modal-title').textContent='تعديل بيانات المعلم';
+  document.getElementById('t-name').value=t.name;document.getElementById('t-ministry').value=t.ministry||'';
+  document.getElementById('t-subject').value=t.subject;document.getElementById('t-type').value=t.type||'معلم أول';
+  document.getElementById('t-username').value=t.user;document.getElementById('t-password').value=t.pass;
+  document.getElementById('t-role').value=t.role;document.getElementById('t-maxload').value=t.maxLoad||22;
+  openModal('teacher-modal');
+}
+
+function saveTeacher(){
+  const editId=document.getElementById('teacher-edit-id').value;
+  const name=document.getElementById('t-name').value.trim();
+  if(!name){showToast('أدخل اسم المعلم','warning');return;}
+  const ministry=document.getElementById('t-ministry').value.trim(),subject=document.getElementById('t-subject').value;
+  const type=document.getElementById('t-type').value,role=document.getElementById('t-role').value;
+  const user=document.getElementById('t-username').value.trim()||genUsername(name);
+  const pass=document.getElementById('t-password').value||genPass(name);
+  const maxLoad=parseInt(document.getElementById('t-maxload').value)||22;
+  if(editId){
+    const idx=teachersData.findIndex(t=>t.id===parseInt(editId));
+    if(idx>=0)teachersData[idx]={...teachersData[idx],name,ministry,subject,type,role,user,pass,maxLoad};
+  }else{
+    if(teachersData.find(t=>t.user===user)){showToast('اسم المستخدم مستخدم مسبقاً','warning');return;}
+    teachersData.push({id:Math.max(...teachersData.map(t=>t.id))+1,name,ministry,subject,type,role,user,pass,maxLoad,subs:0});
+  }
+  closeModal('teacher-modal');resetTeacherForm();buildTeachersGrid();fillTeacherSelects();showToast('✅ تم الحفظ','success');
+}
+
+function resetTeacherForm(){
+  document.getElementById('teacher-edit-id').value='';
+  ['t-name','t-ministry','t-username','t-password'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('teacher-modal-title').textContent='إضافة معلم جديد';
+  document.getElementById('t-maxload').value=22;
+}
+
+function genUsername(name){
+  const t={'ا':'a','أ':'a','إ':'a','آ':'a','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh','د':'d','ذ':'z','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'g','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y','ى':'a','ة':'h'};
+  const tr=s=>[...s].map(c=>t[c]||'').join('');
+  const parts=name.split(' ').filter(Boolean);
+  return`${tr(parts[0]||'')}.${tr(parts[parts.length-1]||'')}`.toLowerCase().replace(/\.$/,'')||'user'+Date.now();
+}
+function genPass(name){return(name.split(' ')[0]||'user').slice(0,2).toLowerCase()+(Math.floor(Math.random()*9000)+1000);}
+
+// ===================== USERS TABLE =====================
+function buildUsersTable(){
+  const cont=document.getElementById('users-table-container');if(!cont)return;
+  let h=`<table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--blue-soft);">
+    <th style="padding:9px 10px;border:1px solid var(--border);text-align:right;">الاسم الكامل</th>
+    <th style="padding:9px 10px;border:1px solid var(--border);">التخصص</th>
+    <th style="padding:9px 10px;border:1px solid var(--border);">اسم المستخدم</th>
+    <th style="padding:9px 10px;border:1px solid var(--border);">كلمة المرور</th>
+    <th style="padding:9px 10px;border:1px solid var(--border);">الصلاحية</th>
+    <th style="padding:9px 10px;border:1px solid var(--border);">الرقم الوزاري</th>
+  </tr></thead><tbody>`;
+  teachersData.forEach(t=>{
+    const rc={admin:'tag-blue',assistant:'tag-purple',first:'tag-teal',teacher:'tag-green'}[t.role]||'tag-green';
+    h+=`<tr><td style="padding:7px 10px;border:1px solid var(--border);font-weight:600;">${t.name}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);">${t.subject}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);font-family:monospace;">${t.user}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);font-family:monospace;">${t.pass}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);text-align:center;"><span class="tag ${rc}">${ROLE_NAMES[t.role]}</span></td>
+      <td style="padding:7px 10px;border:1px solid var(--border);">${t.ministry||'—'}</td></tr>`;
+  });h+='</tbody></table>';cont.innerHTML=h;
+}
+
+// ===================== NOTIFICATIONS =====================
+function addNotif(title,body,type){
+  notificationsData.unshift({id:Date.now(),title,body,type,read:false,time:fmtTime()});
+  updateNotifBadge();
+}
+function updateNotifBadge(){
+  const unread=notificationsData.filter(n=>!n.read).length;
+  const b=document.getElementById('notif-nav-badge');if(b)b.textContent=unread;
+  const dot=document.getElementById('notif-dot');if(dot)dot.style.display=unread>0?'block':'none';
+}
+function renderNotifications(){
+  const el=document.getElementById('notif-list');if(!el)return;
+  const icons={info:'ℹ️',success:'✅',warning:'⚠️',error:'❌'};
+  el.innerHTML=notificationsData.map(n=>`<div class="notif-item ${n.read?'':'unread'}">
+    <div class="notif-icon" style="background:${n.type==='success'?'var(--green-light)':n.type==='warning'?'var(--amber-light)':'var(--blue-light)'};">${icons[n.type]||'ℹ️'}</div>
+    <div class="notif-body"><p>${n.title}</p><span>${n.body} · ${n.time}</span></div>
+    <button class="btn btn-xs btn-secondary" onclick="notificationsData=notificationsData.filter(x=>x.id!==${n.id});renderNotifications();">✕</button>
+  </div>`).join('')||'<div style="text-align:center;padding:30px;color:var(--text3);">لا توجد إشعارات</div>';
+}
+function markAllRead(){notificationsData.forEach(n=>n.read=true);updateNotifBadge();renderNotifications();}
+
+// ===================== NAVIGATION =====================
+function showPage(name,navEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById(`page-${name}`);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(navEl)navEl.classList.add('active');
+  const titles={dashboard:'لوحة التحكم',schedule:'الجدول الأسبوعي',swap:'التبديل والتعويض',worksched:'جدول الإشغال',teachers:'إدارة المعلمين',absences:'الغيابات',notifications:'الإشعارات',users:'إدارة المستخدمين',support:'الدعم الفني',biometric:'نظام البصمة','ai-assistant':'المساعد الذكي','ai-generator':'توليد الجدول بالذكاء'};
+  document.getElementById('page-title').textContent=titles[name]||name;
+  if(name==='schedule')buildScheduleTable(currentDay);
+  if(name==='teachers')buildTeachersGrid();
+  if(name==='users')buildUsersTable();
+  if(name==='notifications'){renderNotifications();markAllRead();}
+  if(name==='worksched')buildWorkSchedTable();
+  if(name==='absences')renderAbsences();
+  if(name==='swap')renderSwapLog();
+  const sb=document.getElementById('sidebar');if(sb&&sb.classList.contains('open'))sb.classList.remove('open');
+}
+
+// ===================== MODALS =====================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
+
+// ===================== UTILS =====================
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+function fmtTime(){const n=new Date();return`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;}
+function showToast(msg,type='info'){
+  const toast=document.getElementById('toast');const div=document.createElement('div');
+  div.className=`toast-msg ${type}`;
+  const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  div.innerHTML=`${icons[type]||'ℹ️'} ${msg}`;toast.appendChild(div);
+  setTimeout(()=>{div.style.opacity='0';div.style.transition='opacity .3s';setTimeout(()=>div.remove(),300);},3500);
+}
+
+// Cell menu modal
+const cmm=document.createElement('div');cmm.className='modal-overlay';cmm.id='cell-menu-modal';
+cmm.innerHTML='<div class="modal"><div id="cell-menu-content"></div></div>';
+document.body.appendChild(cmm);
+cmm.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+
+// ===================== BIOMETRIC INTEGRATION API =====================
+// هذا القسم جاهز للربط مع نظام البصمة — يكفي تعديل BIOMETRIC_API_URL
+const BIOMETRIC_API_URL = 'YOUR_FINGERPRINT_SYSTEM_API_URL'; // ← ضع رابط API البصمة هنا
+const BIOMETRIC_API_KEY = 'YOUR_API_KEY'; // ← مفتاح API البصمة
+
+let biometricConnected = false;
+let biometricPollInterval = null;
+
+async function connectBiometric() {
+  const statusEl = document.getElementById('biometric-status');
+  const btnEl = document.getElementById('biometric-connect-btn');
+  if (statusEl) statusEl.textContent = '⏳ جاري الاتصال...';
+  try {
+    // محاكاة الاتصال — استبدل هذا بـ fetch حقيقي
+    // const resp = await fetch(BIOMETRIC_API_URL+'/ping', {headers:{'Authorization':'Bearer '+BIOMETRIC_API_KEY}});
+    // if(!resp.ok) throw new Error('فشل الاتصال');
+    // محاكاة نجاح الاتصال
+    await new Promise(r => setTimeout(r, 1200));
+    biometricConnected = true;
+    if (statusEl) { statusEl.textContent = '✅ متصل بنظام البصمة'; statusEl.style.color = 'var(--green)'; }
+    if (btnEl) { btnEl.textContent = '🔄 تحديث البيانات'; btnEl.className = 'btn btn-success btn-sm'; }
+    showToast('✅ تم الاتصال بنظام البصمة', 'success');
+    startBiometricPolling();
+    await fetchBiometricAttendance();
+  } catch(e) {
+    biometricConnected = false;
+    if (statusEl) { statusEl.textContent = '❌ تعذّر الاتصال — تأكد من إعداد API'; statusEl.style.color = 'var(--red)'; }
+    showToast('تعذّر الاتصال: ' + e.message, 'error');
+  }
+}
+
+async function fetchBiometricAttendance() {
+  if (!biometricConnected) { showToast('غير متصل بنظام البصمة', 'warning'); return; }
+  try {
+    // محاكاة — استبدل بـ fetch حقيقي لنظام البصمة
+    // const resp = await fetch(BIOMETRIC_API_URL+'/attendance/today', {headers:{...}});
+    // const json = await resp.json(); // [{ministry_id, name, time_in, status}]
+    // simulateResponse:
+    const simData = teachersData.filter(t=>t.role!=='admin').map(t => ({
+      ministry_id: t.ministry,
+      name: t.name,
+      time_in: Math.random()>0.15 ? `0${7+Math.floor(Math.random()*2)}:${String(Math.floor(Math.random()*60)).padStart(2,'0')}` : null,
+      status: Math.random()>0.12 ? 'present' : 'absent'
+    }));
+    processBiometricData(simData);
+  } catch(e) {
+    showToast('خطأ في جلب بيانات البصمة', 'error');
+  }
+}
+
+function processBiometricData(data) {
+  let presentCount = 0, absentList = [];
+  data.forEach(row => {
+    const teacher = teachersData.find(t => t.ministry === row.ministry_id || t.name === row.name);
+    if (!teacher) return;
+    teacher.todayStatus = row.status;
+    teacher.timeIn = row.time_in;
+    if (row.status === 'present') { presentCount++; }
+    else {
+      absentList.push(teacher.name);
+      // تلقائياً سجّل غياب إذا لم يكن مسجلاً
+      const alreadyAbsent = absencesData.find(a => a.teacher === teacher.name && a.date === new Date().toLocaleDateString('ar-JO'));
+      if (!alreadyAbsent) {
+        absencesData.unshift({
+          id: Date.now() + Math.random(),
+          teacher: teacher.name,
+          date: new Date().toLocaleDateString('ar-JO'),
+          periods: ['1','2','3','4','5','6','7'],
+          notes: '📲 مسجّل تلقائياً من نظام البصمة',
+          covered: false,
+          substitute: null,
+          fromBiometric: true
+        });
+      }
+    }
+  });
+  const el = document.getElementById('stat-present');
+  if (el) el.textContent = presentCount;
+  const uncovEl = document.getElementById('stat-uncovered');
+  if (uncovEl) uncovEl.textContent = absencesData.filter(a=>!a.covered).length;
+  document.getElementById('abs-badge').textContent = absencesData.filter(a=>!a.covered).length;
+  renderAbsences();
+  renderBiometricTable(data);
+  addNotif('📲 تحديث البصمة', `حاضر: ${presentCount} | غائب: ${absentList.length}`, 'info');
+  showToast(`📲 تم التحديث: ${presentCount} حاضر، ${absentList.length} غائب`, 'success');
+}
+
+function renderBiometricTable(data) {
+  const el = document.getElementById('biometric-table');
+  if (!el) return;
+  let html = `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <thead><tr style="background:var(--blue-soft);">
+      <th style="padding:8px;border:1px solid var(--border);text-align:right;">المعلم</th>
+      <th style="padding:8px;border:1px solid var(--border);">التخصص</th>
+      <th style="padding:8px;border:1px solid var(--border);">وقت الحضور</th>
+      <th style="padding:8px;border:1px solid var(--border);">الحالة</th>
+    </tr></thead><tbody>`;
+  data.forEach(row => {
+    const teacher = teachersData.find(t => t.ministry === row.ministry_id || t.name === row.name);
+    const subj = teacher ? teacher.subject : '—';
+    const statusBadge = row.status === 'present'
+      ? `<span style="background:var(--green-light);color:var(--green);padding:2px 10px;border-radius:12px;font-weight:700;">✅ حاضر</span>`
+      : `<span style="background:var(--red-light);color:var(--red);padding:2px 10px;border-radius:12px;font-weight:700;">🔴 غائب</span>`;
+    html += `<tr>
+      <td style="padding:7px 10px;border:1px solid var(--border);font-weight:600;">${row.name}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);color:var(--text2);">${subj}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);text-align:center;">${row.time_in || '—'}</td>
+      <td style="padding:7px 10px;border:1px solid var(--border);text-align:center;">${statusBadge}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function startBiometricPolling() {
+  if (biometricPollInterval) clearInterval(biometricPollInterval);
+  biometricPollInterval = setInterval(() => {
+    if (biometricConnected) fetchBiometricAttendance();
+  }, 5 * 60 * 1000); // كل 5 دقائق
+}
+
+// ===================== SMART SWAP VALIDATION =====================
+function validateSwap(t1, t2, d1, p1, d2, p2) {
+  const errors = [];
+  // 1. لا تبديل أستاذ بأستاذ مختلف التخصص
+  const teacher1 = teachersData.find(t => t.name === t1);
+  const teacher2 = teachersData.find(t => t.name === t2);
+  if (teacher1 && teacher2 && teacher1.subject !== teacher2.subject) {
+    errors.push(`⛔ لا يمكن التبديل: ${t1} (${teacher1.subject}) مع ${t2} (${teacher2.subject}) — التخصصات مختلفة`);
+  }
+  // 2. المعلم لديه حصة بالفعل في نفس الوقت
+  if (t1 === t2) { errors.push('⛔ لا يمكن تبديل المعلم مع نفسه'); }
+  // 3. التحقق من أن كلا المعلمين لديهم حصص في الأوقات المحددة
+  const l1 = findLesson(d1, parseInt(p1), t1);
+  const l2 = findLesson(d2, parseInt(p2), t2);
+  if (!l1) errors.push(`⚠️ ${t1} ليس لديه حصة في ${d1} ح${p1}`);
+  if (!l2) errors.push(`⚠️ ${t2} ليس لديه حصة في ${d2} ح${p2}`);
+  // 4. تحقق من أن المعلم الأول ليس لديه حصة في وقت المعلم الثاني (تعارض)
+  if (l1 && l2 && d1===d2 && p1===p2) errors.push('⛔ نفس الحصة — لا داعي للتبديل');
+  const conflict1 = l1 && findLesson(d2, parseInt(p2), t1);
+  const conflict2 = l2 && findLesson(d1, parseInt(p1), t2);
+  if (conflict1) errors.push(`⚠️ ${t1} لديه حصة بالفعل في ${d2} ح${p2} — تعارض!`);
+  if (conflict2) errors.push(`⚠️ ${t2} لديه حصة بالفعل في ${d1} ح${p1} — تعارض!`);
+  return errors;
+}
+
+function executeSwap() {
+  const d1=document.getElementById('swap-day1').value,p1=document.getElementById('swap-period1').value,t1=document.getElementById('swap-teacher1').value;
+  const d2=document.getElementById('swap-day2').value,p2=document.getElementById('swap-period2').value,t2=document.getElementById('swap-teacher2').value;
+  if(!d1||!p1||!t1||!d2||!p2||!t2){showToast('يرجى اختيار جميع الحقول','warning');return;}
+  // التحقق الذكي
+  const errors = validateSwap(t1, t2, d1, p1, d2, p2);
+  if (errors.length > 0) {
+    showSwapErrors(errors);
+    return;
+  }
+  const l1=findLesson(d1,parseInt(p1),t1),l2=findLesson(d2,parseInt(p2),t2);
+  if(!dailyChanges[d1])dailyChanges[d1]={};if(!dailyChanges[d2])dailyChanges[d2]={};
+  dailyChanges[d1][`${p1}|${l1.cls}`]={...l1.cell,t:t2,ct:'swap'};
+  dailyChanges[d2][`${p2}|${l2.cls}`]={...l2.cell,t:t1,ct:'swap'};
+  swapLog.unshift({id:Date.now(),type:'تبديل',day:d1,period:parseInt(p1),cls:`${l1.cls} ↔ ${l2.cls}`,teacher:`${t1} ↔ ${t2}`,time:fmtTime()});
+  addNotif('تبديل منفذ',`تم تبديل حصة ${t1} مع ${t2}`,'success');
+  buildScheduleTable(currentDay);renderSwapLog();showToast('✅ تم التبديل بنجاح','success');clearSwap();
+  document.getElementById('stat-swaps').textContent = swapLog.length;
+}
+
+function showSwapErrors(errors) {
+  const box = document.getElementById('swap-validation-box');
+  if (!box) return;
+  box.innerHTML = errors.map(e=>`<div class="alert alert-danger" style="margin-bottom:6px;">${e}</div>`).join('');
+  box.style.display = 'block';
+  setTimeout(()=>{ box.innerHTML=''; box.style.display='none'; }, 7000);
+}
+
+// ===================== AI ASSISTANT =====================
+let aiChatHistory = [];
+
+async function sendAIMessage() {
+  const input = document.getElementById('ai-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addAIChatBubble(msg, 'user');
+  const loadId = addAILoading();
+  try {
+    // بناء سياق النظام بالبيانات الحقيقية
+    const systemPrompt = buildAISystemPrompt();
+    aiChatHistory.push({ role: 'user', content: msg });
+    const apiKey = document.getElementById('gemini-api-key-input')?.value?.trim() || window._GEMINI_KEY || '';
+    if (!apiKey) {
+      removeAILoading(loadId);
+      addAIChatBubble('⚠️ يرجى إدخال مفتاح Gemini API في إعدادات المساعد (زر ⚙️ API)', 'assistant');
+      document.getElementById('ai-key-settings').style.display='block';
+      return;
+    }
+    // بناء messages بصيغة Gemini (system + history)
+    const geminiContents = [];
+    // أضف السياق كأول رسالة
+    geminiContents.push({ role:'user', parts:[{text: buildAISystemPrompt() + '\n\nالسؤال: ' + msg}] });
+    // أضف تاريخ المحادثة
+    for(let i=0; i<aiChatHistory.length-1; i++){
+      const h=aiChatHistory[i];
+      geminiContents.push({ role: h.role==='assistant'?'model':'user', parts:[{text:h.content}] });
+    }
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: geminiContents })
+      }
+    );
+    const data = await resp.json();
+    if(data.error){ throw new Error(data.error.message || 'خطأ في Gemini API'); }
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'لم أتمكن من الإجابة، حاول مجدداً.';
+    removeAILoading(loadId);
+    addAIChatBubble(reply, 'assistant');
+    aiChatHistory.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    removeAILoading(loadId);
+    addAIChatBubble('❌ خطأ في الاتصال بالذكاء الاصطناعي. تأكد من الاتصال بالإنترنت.', 'assistant');
+  }
+}
+
+function buildAISystemPrompt() {
+  const teacherList = teachersData.map(t=>`${t.name} (${t.subject}, ${t.type})`).join('، ');
+  const classList = CLASSES.join('، ');
+  // ملخص جدول اليوم
+  const todayData = baseSchedule['الأحد'] || {};
+  let schedSummary = '';
+  PERIODS.forEach(p => {
+    const cells = todayData[p.n] || {};
+    const entries = Object.entries(cells).map(([cl,v])=>`${cl}:${v.s}/${v.t}`).join(' | ');
+    if(entries) schedSummary += `ح${p.n}: ${entries}\n`;
+  });
+  return `أنت مساعد ذكي لنظام إدارة الجدول المدرسي في مدرسة عكرمة الثانوية للبنين بالأردن.
+لديك معرفة كاملة بجميع بيانات المدرسة:
+
+المعلمون (${teachersData.length} معلم): ${teacherList}
+
+الشعب الدراسية: ${classList}
+
+أوقات الحصص: ح1(8:00-8:45) ح2(8:50-9:35) ح3(9:40-10:25) ح4(10:30-11:15) ح5(11:20-12:05) ح6(12:10-12:55) ح7(13:00-13:45)
+
+أيام الدراسة: الأحد الاثنين الثلاثاء الأربعاء الخميس
+
+جدول يوم الأحد (نموذج):
+${schedSummary}
+
+الغيابات المسجلة اليوم: ${absencesData.filter(a=>!a.covered).length} حصة بدون تعويض
+
+أجب على كل أسئلة المستخدم المتعلقة بالجدول، المعلمين، الغيابات، والتبديلات.
+مثال: إذا سُئلت "وين حصة الأستاذ فريد؟" ابحث عن فريد في الجدول وأجب بدقة.
+إذا طُلب منك اقتراح جدول، قدم اقتراحاً منطقياً مع مراعاة التخصصات والحمل الدراسي.
+اللغة: العربية. أسلوب: مختصر ومباشر ومهني.`;
+}
+
+function addAIChatBubble(text, role) {
+  const container = document.getElementById('ai-chat-messages');
+  if (!container) return;
+  const div = document.createElement('div');
+  div.style.cssText = `margin-bottom:10px;display:flex;flex-direction:column;align-items:${role==='user'?'flex-end':'flex-start'};`;
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `max-width:80%;padding:10px 14px;border-radius:${role==='user'?'14px 14px 4px 14px':'14px 14px 14px 4px'};font-size:13px;line-height:1.6;white-space:pre-wrap;${role==='user'?'background:var(--blue);color:#fff;':'background:var(--bg3);border:1.5px solid var(--border);color:var(--text);'}`;
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function addAILoading() {
+  const id = 'ai-load-' + Date.now();
+  const container = document.getElementById('ai-chat-messages');
+  if (!container) return id;
+  const div = document.createElement('div');
+  div.id = id;
+  div.style.cssText = 'margin-bottom:10px;display:flex;align-items:flex-start;';
+  div.innerHTML = `<div style="background:var(--bg3);border:1.5px solid var(--border);border-radius:14px 14px 14px 4px;padding:10px 16px;font-size:13px;color:var(--text2);">⏳ جاري التفكير...</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeAILoading(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function clearAIChat() {
+  aiChatHistory = [];
+  const container = document.getElementById('ai-chat-messages');
+  if (container) container.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">🤖 مساعد الجدول الذكي — اسألني عن أي شيء في الجدول أو المعلمين</div>`;
+}
+
+// ===================== AI SCHEDULE GENERATOR =====================
+async function generateAISchedule(type) {
+  const btnId = type === 'main' ? 'ai-gen-main-btn' : 'ai-gen-work-btn';
+  const btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري الاقتراح...'; }
+  const resultEl = document.getElementById('ai-schedule-result');
+  if (resultEl) resultEl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text2);">⏳ الذكاء الاصطناعي يُنشئ الجدول...</div>';
+
+  const subjectsByTeacher = {};
+  teachersData.forEach(t => {
+    if (!subjectsByTeacher[t.subject]) subjectsByTeacher[t.subject] = [];
+    subjectsByTeacher[t.subject].push(t.name + (t.maxLoad ? ` (حصص:${t.maxLoad})` : ''));
+  });
+  const subjectSummary = Object.entries(subjectsByTeacher).map(([s,ts])=>`${s}: ${ts.join('، ')}`).join('\n');
+
+  const prompt = type === 'main'
+    ? `أنت خبير في إدارة الجداول المدرسية. 
+المعلمون حسب التخصص:
+${subjectSummary}
+
+الشعب: ${CLASSES.join('، ')}
+الأيام: الأحد-الخميس (5 أيام)
+الحصص: 7 حصص يومياً (8:00-13:45)
+الحد الأقصى لكل معلم: حسب نوعه (خبير:20، معلم أول:22 حصة أسبوعياً)
+
+اقترح جدول أسبوعي كامل لثلاث شعب فقط (عاشر أ، عاشر ب، عاشر ج) كنموذج.
+قدم الجدول بصيغة جدول HTML واضح بالعربية، مع توزيع المواد بشكل منطقي.
+تأكد أن لا يتكرر معلم في حصتين بنفس الوقت.`
+    : `أنت خبير في إدارة الجداول المدرسية.
+جدول الإشغال هو جدول للمعلمين المتاحين في الحصص التي ليس لديهم فيها صفوف، لتغطية غيابات الزملاء.
+
+المعلمون المتاحون:
+${teachersData.filter(t=>t.role!=='admin').map(t=>`${t.name} (${t.subject}، حد أقصى: ${t.maxLoad||22} حصة)`).join('\n')}
+
+اقترح جدول إشغال أسبوعي للأيام الخمسة وللحصص السبع.
+يجب أن يكون كل معلم متاحاً في الحصص التي ليس لديه فيها حصص أصلية.
+قدم الجدول بصيغة جدول HTML واضح: الصفوف = الحصص، الأعمدة = الأيام.`;
+
+  try {
+    const apiKey2 = document.getElementById('gemini-api-key-input')?.value?.trim() || window._GEMINI_KEY || '';
+    if (!apiKey2) {
+      if (resultEl) resultEl.innerHTML = '<div class="alert alert-warning">⚠️ يرجى إدخال مفتاح Gemini API أولاً (في صفحة المساعد الذكي)</div>';
+      if (btn) { btn.disabled = false; btn.textContent = type==='main'?'🤖 اقتراح جدول رئيسي':'🤖 اقتراح جدول إشغال'; }
+      return;
+    }
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey2}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role:'user', parts:[{text: prompt}] }] })
+      }
+    );
+    const data = await resp.json();
+    if(data.error){ throw new Error(data.error.message || 'خطأ في Gemini API'); }
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'لم أتمكن من الاقتراح.';
+    if (resultEl) {
+      resultEl.innerHTML = `
+        <div style="background:var(--green-light);border:1px solid var(--green);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:var(--green);">
+          ✅ تم إنشاء الجدول المقترح بواسطة الذكاء الاصطناعي
+        </div>
+        <div style="font-size:13px;line-height:1.8;">${reply.replace(/\n/g,'<br>')}</div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="applyAISuggestedSchedule(this.previousElementSibling.previousElementSibling.previousElementSibling)">✅ تطبيق الجدول المقترح</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('ai-schedule-result').innerHTML=''">✕ إلغاء</button>
+        </div>`;
+    }
+  } catch(e) {
+    if (resultEl) resultEl.innerHTML = '<div class="alert alert-danger">❌ خطأ في الاتصال. تأكد من الإنترنت.</div>';
+  }
+  if (btn) { btn.disabled = false; btn.textContent = type==='main'?'🤖 اقتراح جدول رئيسي':'🤖 اقتراح جدول إشغال'; }
+}
+
+function applyAISuggestedSchedule(contentEl) {
+  // هذه الدالة تطبّق الجدول المقترح — حالياً تعرض رسالة تأكيد
+  if (confirm('هل تريد تطبيق الجدول المقترح؟ سيتم دمجه مع الجدول الحالي.')) {
+    showToast('✅ تم حفظ الجدول المقترح (يمكن تعديله يدوياً من الجدول الرئيسي)', 'success');
+    addNotif('جدول مقترح', 'تم إنشاء جدول مقترح بواسطة الذكاء الاصطناعي', 'success');
+    document.getElementById('ai-schedule-result').innerHTML = '<div class="alert alert-success">✅ تم حفظ الاقتراح. راجع الجدول الرئيسي لتطبيق التعديلات يدوياً.</div>';
+  }
+}
+
+function saveBiometricConfig() {
+  const url = document.getElementById('bio-api-url')?.value.trim();
+  const key = document.getElementById('bio-api-key')?.value.trim();
+  if (url) window._BIOMETRIC_URL = url;
+  if (key) window._BIOMETRIC_KEY = key;
+  showToast('✅ تم حفظ إعدادات البصمة', 'success');
+}
+
+// Update ai-schedule-result display
+const origGenResult = document.getElementById('ai-schedule-result');
+
+
+function toggleAIKeySettings() {
+  const box = document.getElementById('ai-key-settings');
+  if (box) box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+function saveGeminiKey(val) {
+  window._GEMINI_KEY = val.trim();
+  // sync both inputs if exist
+  document.querySelectorAll('#gemini-api-key-input').forEach(el => { if(el.value !== val) el.value = val; });
+}
+
+// Lesson notification timer
+setInterval(()=>{
+  if(!currentUser)return;
+  const now=new Date(),h=now.getHours(),m=now.getMinutes();
+  PERIODS.forEach(p=>{
+    const[ph,pm]=p.t.split('-')[0].split(':').map(Number);
+    if(h===ph&&Math.abs(m-pm)===5)addNotif('⏰ تنبيه حصة',`الحصة ${p.n} (${p.t}) تبدأ خلال 5 دقائق`,'info');
+  });
+},60000);
+</script>
+</body>
+</html>
