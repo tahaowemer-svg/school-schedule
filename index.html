@@ -409,15 +409,6 @@ nav{flex:1;padding:8px;overflow-y:auto;}
     </div>
     <button class="btn-login" onclick="doLogin()">تسجيل الدخول</button>
     <div class="login-error" id="login-error">اسم المستخدم أو كلمة المرور غير صحيحة</div>
-    <div class="demo-accounts">
-      <p>حسابات تجريبية للعرض</p>
-      <div class="demo-grid">
-        <div class="demo-btn" onclick="quickLogin('admin','admin123')">🔑 مدير المدرسة</div>
-        <div class="demo-btn" onclick="quickLogin('alaa.abumharib','asst123')">🛠 مساعد المدير</div>
-        <div class="demo-btn" onclick="quickLogin('ibrahim.aborwish','ib1234')">👁 مناوب أول</div>
-        <div class="demo-btn" onclick="quickLogin('ismail.rajudi','is1234')">👨‍🏫 معلم</div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -445,7 +436,7 @@ nav{flex:1;padding:8px;overflow-y:auto;}
       <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span> لوحة التحكم</div>
       <div class="nav-section">الجدول</div>
       <div class="nav-item" onclick="showPage('schedule',this)"><span class="nav-icon">📅</span> الجدول الأسبوعي</div>
-      <div class="nav-item duty-up" onclick="showPage('swap',this)"><span class="nav-icon">🔄</span> التبديل والتعويض</div>
+      <div class="nav-item duty-up" onclick="showPage('swap',this)"><span class="nav-icon">🔁</span> التبديل والتعويض</div>
       <div class="nav-item duty-up" onclick="showPage('worksched',this)"><span class="nav-icon">📋</span> جدول الإشغال</div>
       <div class="nav-section">الإدارة</div>
       <div class="nav-item duty-up" onclick="showPage('absences',this)"><span class="nav-icon">🔴</span> الغيابات <span class="nav-badge" id="abs-badge">0</span></div>
@@ -457,7 +448,6 @@ nav{flex:1;padding:8px;overflow-y:auto;}
       <div class="nav-item assistant-up" onclick="showPage('ai-generator',this)"><span class="nav-icon">✨</span> توليد الجدول بالذكاء</div>
       <div class="nav-section">أخرى</div>
       <div class="nav-item" onclick="showPage('notifications',this)"><span class="nav-icon">🔔</span> الإشعارات <span class="nav-badge" id="notif-nav-badge">1</span></div>
-      <div class="nav-item" onclick="showPage('sub-log',this)"><span class="nav-icon">📋</span> سجل التعويض</div>
       <div class="nav-item" onclick="showPage('support',this)"><span class="nav-icon">💬</span> الدعم الفني</div>
     </nav>
     <div class="sidebar-footer">
@@ -577,8 +567,19 @@ nav{flex:1;padding:8px;overflow-y:auto;}
           <div style="margin-top:10px;"><button class="btn btn-success" onclick="executeCover()">✅ تنفيذ الإشغال</button></div>
         </div>
         <div class="card">
-          <div class="card-header"><h3>📋 سجل التبديلات</h3><button class="btn btn-xs btn-danger" onclick="clearSwapLog()">مسح السجل</button></div>
+          <div class="card-header"><h3>🔁 سجل التبديلات</h3><button class="btn btn-xs btn-danger" onclick="clearSwapLog()">مسح السجل</button></div>
           <div class="card-body" id="swap-log" style="padding:10px;"></div>
+        </div>
+        <!-- سجل التعويض -->
+        <div class="card" style="margin-top:14px;">
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <h3>📝 سجل حصص التعويض الكامل</h3>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary btn-sm" onclick="exportSubLog()">📥 تصدير CSV</button>
+              <button class="btn btn-danger btn-sm" onclick="clearAllSubLog()">🗑 مسح الكل</button>
+            </div>
+          </div>
+          <div class="card-body" style="padding:0;"><div id="sub-log-container"></div></div>
         </div>
       </div>
 
@@ -626,7 +627,13 @@ nav{flex:1;padding:8px;overflow-y:auto;}
       <!-- USERS -->
       <div class="page" id="page-users">
         <div class="card">
-          <div class="card-header"><h3>🔐 إدارة المستخدمين وصلاحياتهم</h3></div>
+          <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <h3>🔐 إدارة المستخدمين وصلاحياتهم</h3>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary btn-sm" onclick="exportUsersExcel()">📊 Excel</button>
+              <button class="btn btn-danger btn-sm" onclick="exportUsersPDF()">📄 PDF</button>
+            </div>
+          </div>
           <div class="card-body" style="padding:0;overflow-x:auto;" id="users-table-container"></div>
         </div>
       </div>
@@ -1574,7 +1581,7 @@ function showPage(name,navEl){
   const pg=document.getElementById(`page-${name}`);if(pg)pg.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(navEl)navEl.classList.add('active');
-  const titles={dashboard:'لوحة التحكم',schedule:'الجدول الأسبوعي',swap:'التبديل والتعويض',worksched:'جدول الإشغال',teachers:'إدارة المعلمين',absences:'الغيابات',notifications:'الإشعارات',users:'إدارة المستخدمين',support:'الدعم الفني',biometric:'نظام البصمة','ai-assistant':'المساعد الذكي','ai-generator':'توليد الجدول بالذكاء','sub-log':'سجل التعويض'};
+  const titles={dashboard:'لوحة التحكم',schedule:'الجدول الأسبوعي',swap:'التبديل والتعويض والسجل',worksched:'جدول الإشغال',teachers:'إدارة المعلمين',absences:'الغيابات',notifications:'الإشعارات',users:'إدارة المستخدمين',support:'الدعم الفني',biometric:'نظام البصمة','ai-assistant':'المساعد الذكي','ai-generator':'توليد الجدول بالذكاء'};
   document.getElementById('page-title').textContent=titles[name]||name;
   if(name==='schedule')buildScheduleTable(currentDay);
   if(name==='teachers')buildTeachersGrid();
@@ -1582,8 +1589,8 @@ function showPage(name,navEl){
   if(name==='notifications'){renderNotifications();markAllRead();}
   if(name==='worksched')buildWorkSchedTable();
   if(name==='absences')renderAbsences();
-  if(name==='swap')renderSwapLog();
-  if(name==='sub-log')buildSubLogTable();
+  if(name==='swap'){renderSwapLog();buildSubLogTable();}
+  
   const sb=document.getElementById('sidebar');if(sb&&sb.classList.contains('open'))sb.classList.remove('open');
 }
 
@@ -2054,9 +2061,23 @@ async function generateAIForPage(pageType) {
     let reply = data.choices?.[0]?.message?.content || '';
 
     // استخرج JSON من الرد
-    const jsonMatch = reply.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('لم يرجع الذكاء الاصطناعي بيانات صحيحة');
-    const parsed = JSON.parse(jsonMatch[0]);
+    // تنظيف JSON من الفواصل العربية والمشاكل الشائعة
+    let cleanReply = reply
+      .replace(/،/g, ',')           // فاصلة عربية → إنجليزية
+      .replace(/"/g, '"').replace(/"/g, '"')  // تصحيح علامات الاقتباس
+      .replace(/‘/g, "'").replace(/’/g, "'")
+      .replace(/,\s*}/g, '}')      // إزالة فاصلة قبل }
+      .replace(/,\s*]/g, ']');     // إزالة فاصلة قبل ]
+    const jsonMatch = cleanReply.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('لم يرجع الذكاء الاصطناعي بيانات صحيحة، حاول مرة أخرى');
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch(parseErr) {
+      // محاولة إصلاح JSON المكسور
+      const fixedJson = jsonMatch[0].replace(/([{,]\s*)(\w[^":,{}\[\]]*?)\s*:/g, '$1"$2":');
+      parsed = JSON.parse(fixedJson);
+    }
     const scheduleRows = parsed.schedule || [];
     if (!scheduleRows.length) throw new Error('الجدول فارغ');
 
@@ -2164,6 +2185,46 @@ function saveGeminiKey(val) {
 }
 
 // Lesson notification timer
+function exportUsersExcel() {
+  const RM={admin:'مدير',assistant:'مساعد المدير',first:'مناوب أول',teacher:'معلم',helper:'معلم مساعد'};
+  let csv='\uFEFF';
+  csv+='الاسم الكامل,الرقم الوزاري,التخصص,الرتبة,الصلاحية,اسم المستخدم,الحد الأعلى,الإشغالات\n';
+  teachersData.forEach(t=>{
+    csv+=`"${t.name}","${t.ministry||''}","${t.subject||''}","${t.type||''}","${RM[t.role]||t.role}","${t.user}","${t.maxLoad||22}","${t.subs||0}"\n`;
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='المستخدمين_'+new Date().toLocaleDateString('ar-JO').replace(/[/]/g,'-')+'.csv';
+  a.click();
+  showToast('✅ تم تصدير Excel','success');
+}
+
+function exportUsersPDF() {
+  const RM={admin:'مدير',assistant:'مساعد المدير',first:'مناوب أول',teacher:'معلم',helper:'معلم مساعد'};
+  const rows=teachersData.map((t,i)=>`<tr style="background:${i%2===0?'#f8fafc':'white'}">
+    <td>${i+1}</td><td style="font-weight:600">${t.name}</td><td>${t.ministry||'—'}</td>
+    <td>${t.subject||'—'}</td><td>${t.type||'—'}</td>
+    <td><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:10px;font-size:11px;">${RM[t.role]||t.role}</span></td>
+    <td>${t.user}</td><td style="text-align:center">${t.maxLoad||22}</td><td style="text-align:center">${t.subs||0}</td>
+  </tr>`).join('');
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><title>قائمة المستخدمين</title>
+  <style>body{font-family:Arial,sans-serif;direction:rtl;margin:20px;color:#1e293b;}
+  h1{text-align:center;color:#1a6fb5;font-size:18px;}
+  .sub{text-align:center;color:#64748b;font-size:12px;margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{background:#1a6fb5;color:white;padding:8px;text-align:right;}
+  td{padding:7px 8px;border-bottom:1px solid #e2e8f0;}
+  @media print{button{display:none}}</style></head><body>
+  <h1>🔐 قائمة المستخدمين والصلاحيات</h1>
+  <p class="sub">مدرسة عكرمة الثانوية للبنين — ${new Date().toLocaleDateString('ar-JO')} — الإجمالي: ${teachersData.length} مستخدم</p>
+  <button onclick="window.print()" style="margin-bottom:12px;padding:7px 18px;background:#1a6fb5;color:white;border:none;border-radius:6px;cursor:pointer;">🖨 طباعة / حفظ PDF</button>
+  <table><thead><tr><th>#</th><th>الاسم</th><th>الرقم الوزاري</th><th>التخصص</th><th>الرتبة</th><th>الصلاحية</th><th>اليوزر</th><th>الحد الأعلى</th><th>الإشغالات</th></tr></thead>
+  <tbody>${rows}</tbody></table></body></html>`);
+  win.document.close();
+  showToast('✅ تم فتح صفحة الطباعة','success');
+}
+
 setInterval(()=>{
   if(!currentUser)return;
   const now=new Date(),h=now.getHours(),m=now.getMinutes();
